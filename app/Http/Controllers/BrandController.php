@@ -10,7 +10,7 @@ class BrandController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
@@ -33,7 +33,7 @@ class BrandController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -77,7 +77,7 @@ class BrandController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Brand  $brand
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function edit(Brand $brand)
     {
@@ -89,7 +89,7 @@ class BrandController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Brand  $brand
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Brand $brand)
     {
@@ -121,7 +121,7 @@ class BrandController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Brand  $brand
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Brand $brand)
     {
