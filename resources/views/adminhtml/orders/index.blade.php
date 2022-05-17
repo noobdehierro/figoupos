@@ -33,7 +33,7 @@
                                             <td>{{ $order->name }} {{ $order->lastname }}</td>
                                             <td>{{ $order->sales_type }}</td>
                                             <td>{{ $order->payment_method }}</td>
-                                            <td class="@if ($order->status == 'Completado')text-c-green @elseif($order->status == 'Canceled') text-c-red @else text-c-yellow @endif">{{ $order->status }}</td>
+                                            <td class="@if ($order->status == 'Complete')text-c-green @elseif($order->status == 'Canceled') text-c-red @else text-c-yellow @endif">{{ $order->status }}</td>
                                             <td>{{ $order->total }}</td>
                                             <td>{{ $order->created_at }}</td>
                                             <td>

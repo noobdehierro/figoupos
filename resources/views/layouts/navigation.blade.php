@@ -34,8 +34,8 @@
                     <label>Reportes</label>
                 </li>
 
-                <x-nav-link route="orders.index" icon="trending-up" group="orders">Ventas</x-nav-link>
-                <x-nav-link route="orders.index" icon="user-check" group="orders">Vendedores</x-nav-link>
+                <x-nav-link route="orders.index" icon="trending-up" group="">Ventas</x-nav-link>
+                <x-nav-link route="orders.index" icon="user-check" group="">Vendedores</x-nav-link>
 
                 <li class="nav-item pcoded-menu-caption">
                     <label>Catálogo</label>
@@ -54,14 +54,14 @@
                         <x-nav-link route="brands.index" icon="tag" group="brands">Marcas</x-nav-link>
                     @endadmin
 
-                    @if( Auth::user()->role_id === 1)
+                    @admin
                         <li class="nav-item pcoded-menu-caption">
                             <label>Sistema</label>
                         </li>
 
                         <x-nav-link route="configurations.index" icon="settings" group="configurations">Configuración</x-nav-link>
                         <x-nav-link route="configurations.index" icon="cloud" group="api">API</x-nav-link>
-                    @endif
+                    @endadmin
                 @endif
             </ul>
         </div>

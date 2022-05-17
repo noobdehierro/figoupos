@@ -18,7 +18,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="text-c-purple">Disponible: <span class="font-weight-bold"> {{ $current }}</span></h3>
+                            <h3 class="text-c-purple">Disponible: <span class="font-weight-bold"> ${{ $current }} MXN</span></h3>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                                             <td>{{ $balance->user_name }}</td>
                                             <td>{{ $balance->description }}</td>
                                             <td>{{ $balance->amount }}</td>
-                                            <td><span class="text-black font-bold">{{ $balance->balance }}</span></td>
+                                            <td><span class="f-w-700">${{ $balance->balance }}</span></td>
                                             <td>{{ $balance->created_at }}</td>
                                         </tr>
                                     @endforeach

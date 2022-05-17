@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PortabilityRequest;
+use App\Models\Configuration;
 use App\Models\Portability;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PortabilityController extends Controller
 {
@@ -49,7 +52,9 @@ class PortabilityController extends Controller
         ]);
 
         try {
-            Portability::create($attributes);
+            $portability = Portability::create($attributes);
+
+            self::portabilityNotification($portability);
 
             return redirect()
                 ->route('portability.index')
@@ -104,5 +109,22 @@ class PortabilityController extends Controller
     public function destroy(Portability $portability)
     {
         //
+    }
+
+    /**
+     * Notification for a new portability request
+     *
+     * @param Portability $portability
+     * @return void
+     */
+    private function portabilityNotification(Portability $portability)
+    {
+        $configuration = Configuration::wherein('code', [
+            'notifications_email'
+        ])->get();
+
+        $to = $configuration[0]->value;
+
+        Mail::to($to)->send(new PortabilityRequest($portability));
     }
 }

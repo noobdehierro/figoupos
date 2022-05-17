@@ -10,25 +10,45 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
         $user = auth()->user();
 
         if ($user->role_id <= 2) {
-            $orders = Order::latest()->take(5)->get();
+            $orders = Order::latest()
+                ->take(10)
+                ->get();
         } else {
-            $orders = Order::where('user_id', auth()->user()->id)->latest()->paginate(5);
+            $orders = Order::where('user_id', auth()->user()->id)
+                ->latest()
+                ->paginate(5);
         }
 
         if ($user->role_id <= 2) {
-            $orders = Order::latest()->take(5)->get();
+            $orders = Order::latest()
+                ->take(10)
+                ->get();
         } else {
-            $orders = Order::where('user_id', auth()->user()->id)->latest()->take(5)->get();
+            $orders = Order::where('user_id', auth()->user()->id)
+                ->latest()
+                ->take(10)
+                ->get();
         }
 
-        return view('adminhtml.dashboard', ['orders' => $orders]);
+        $complete = Order::where('status', 'Complete')->count();
+        $pending = Order::where('status', 'Pending')->count();
+        $canceled = Order::where('status', 'Canceled')->count();
+        $total = Order::count();
+
+        return view('adminhtml.dashboard', [
+            'orders' => $orders,
+            'complete' => $complete,
+            'pending' => $pending,
+            'candeled' => $canceled,
+            'total' => $total
+        ]);
     }
 
     /**

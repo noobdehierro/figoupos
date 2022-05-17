@@ -17,6 +17,8 @@
     <meta name="keywords" content="admin templates, bootstrap admin templates, bootstrap 4, dashboard, dashboard templets, sass admin templets, html admin templates, responsive, bootstrap admin templates free download,premium bootstrap admin templates, datta able, datta able bootstrap admin template, free admin theme, free dashboard template"/>
     <meta name="author" content="CodedThemes"/>
 
+    @stack('meta')
+
     <!-- Favicon icon -->
     <link rel="icon" href="{{ asset('adminhtml/images/favicon.png') }}" type="image/x-icon">
     <!-- fontawesome icon -->
@@ -26,9 +28,9 @@
     <!-- vendor css -->
     <link rel="stylesheet" href="{{ asset('adminhtml/css/style.css') }}">
 
-@stack('css')
+    @stack('css')
 
-<!-- Required Js -->
+    <!-- Required Js -->
     <script src="{{ asset('adminhtml/js/vendor-all.min.js') }}"></script>
     <script src="{{ asset('adminhtml/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('adminhtml/js/vendor/jquery.mask.min.js') }}"></script>
@@ -72,6 +74,10 @@
 
 <script src="{{ asset('adminhtml/js/pcoded.min.js') }}"></script>
 @stack('bottom-scripts')
-
+<div id="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
 </body>
 </html>

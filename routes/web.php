@@ -85,6 +85,11 @@ Route::middleware('auth')->group(function () {
         'update'
     ])->name('purchase.update');
 
+    Route::put('/purchase/{order}/conekta', [
+        PurchaseController::class,
+        'conektaOrder'
+    ])->name('purchase.conekta');
+
     /** Recargas */
     Route::get('/recharges', [RechargeController::class, 'index'])->name(
         'recharges.index'
@@ -109,6 +114,16 @@ Route::middleware('auth')->group(function () {
         'update'
     ])->name('recharges.update');
 
+    Route::put('/recharges/{order}/confirm', [
+        RechargeController::class,
+        'confirm'
+    ])->name('recharges.confirm');
+
+    Route::put('/recharges/{order}/conekta', [
+        RechargeController::class,
+        'conektaOrder'
+    ])->name('recharges.conekta');
+
     /** Users */
     Route::get('/users', function () {
         return view('adminhtml.users.index');
@@ -122,11 +137,11 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::resource('balances', BalanceController::class)
         ->only(['index', 'create', 'store'])
-        ->middleware('can:admin');
+        ->middleware('can:super');
     Route::resource(
         'configurations',
         ConfigurationController::class
-    )->middleware('can:admin');
+    )->middleware('can:super');
     Route::resources([
         'users' => UserController::class,
         'offerings' => OfferingController::class,

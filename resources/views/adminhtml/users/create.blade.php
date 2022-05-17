@@ -46,7 +46,7 @@
                                     </x-form-select>
                                 </div>
                                 <div class="row">
-                                    <x-form-input name="sales_limit" type="number" size="s">Limite de venta</x-form-input>
+                                    <x-form-input name="sales_limit" type="number" size="s" group="$">Limite de venta</x-form-input>
                                 </div>
                                 @if( Auth::user()->role_id === 1)
                                     <div class="row">

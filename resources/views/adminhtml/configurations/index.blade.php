@@ -45,7 +45,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="7">
                                                 <x-flash type="warning">No hay configuraciones</x-flash>
                                             </td>
                                         </tr>

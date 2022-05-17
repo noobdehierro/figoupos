@@ -40,4 +40,9 @@ class Order extends Model
         'channel',
         'total'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -112,7 +112,8 @@
                                     <td>Canal</td>
                                     <td>:</td>
                                     <td>{{ $order->channel }}</td>
-                                </tr
+                                </tr>
+                                <tr><td colspan="3">&nbsp;</td> </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -130,6 +131,11 @@
                                     <td class="text-c-blue">{{ $order->payment_method }}</td>
                                 </tr>
                                 <tr class="text-dark">
+                                    <td>Referencia</td>
+                                    <td>:</td>
+                                    <td class="text-c-blue">{{ $order->payment_id }}</td>
+                                </tr>
+                                <tr class="text-dark">
                                     <td>ID</td>
                                     <td>:</td>
                                     <td>{{ $order->qv_offering_id }}</td>
@@ -140,9 +146,9 @@
                                     <td>{{ $order->created_at }}</td>
                                 </tr>
                                 <tr class="text-dark">
-                                    <td>Total</td>
+                                    <td><span class="f-w-700">Total</span></td>
                                     <td>:</td>
-                                    <td>{{ $order->total }}</td>
+                                    <td><span class="f-w-700">${{ $order->total }} MXN</span> </td>
                                 </tr>
                                 </tbody>
                             </table>

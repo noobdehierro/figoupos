@@ -28,7 +28,7 @@
                                     <x-form-input name="email" required="true" type="email" value="{{ $user->email }}" :readonly="(Auth::user()->role_id === 1) ? 'false' : 'true'" size="s">Correo electrónico</x-form-input>
                                 </div>
                                 <div class="row">
-                                    <x-form-input name="sales_limit" type="number" value="{{ $user->sales_limit }}" size="s">Limite de venta</x-form-input>
+                                    <x-form-input name="sales_limit" type="number" value="{{ $user->sales_limit }}" size="s" group="$">Limite de venta</x-form-input>
                                 </div>
 
                                 @if( Auth::user()->role_id === 1)

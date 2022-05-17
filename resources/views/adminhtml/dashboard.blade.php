@@ -72,7 +72,7 @@
                                                 <h6 class="mb-1">{{ $order->payment_method }}</h6>
                                             </td>
                                             <td>
-                                                <h6 class="m-0 @if ($order->status == 'Completado')text-c-green @elseif($order->status == 'Canceled') text-c-red @else text-c-yellow @endif">{{ $order->status }}</h6>
+                                                <h6 class="m-0 @if ($order->status == 'Complete')text-c-green @elseif($order->status == 'Canceled') text-c-red @else text-c-yellow @endif">{{ $order->status }}</h6>
                                             </td>
                                             <td>
                                                 <h6 class="m-0">{{ $order->created_at }}</h6>
@@ -91,17 +91,28 @@
             </div>
             <!-- Fin ordenes recientes -->
 
+            @admin
             <!-- Graficos -->
             <div class="row">
                 <div class="col-md-6 col-xl-4">
                     <div class="card Online-Order">
                         <div class="card-block">
                             <h5>Completadas</h5>
-                            <h6 class="text-muted d-flex align-items-center justify-content-between m-t-30">Pago aceptado<span class="float-end f-18 text-c-green">237 / 400</span></h6>
+                            <h6 class="text-muted d-flex align-items-center justify-content-between m-t-30">Pago aceptado<span class="float-end f-18 text-c-green">{{ $complete }} / {{ $total }}</span></h6>
                             <div class="progress mt-3">
-                                <div class="progress-bar progress-c-green" role="progressbar" style="width:65%;height:6px;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar progress-c-green" role="progressbar" style="
+                                @if($total != 0)
+                                    width:{{ number_format(($complete / $total) * 100, 2 ) }}%;
+                                @else
+                                    width: 0;
+                                @endif
+                                    height:6px;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                            <span class="text-muted mt-2 d-block">37% Listo</span>
+                            <span class="text-muted mt-2 d-block">
+                                @if($total != 0)
+                                    {{ number_format(($complete / $total) * 100, 2 ) }}% Listo
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -109,11 +120,21 @@
                     <div class="card Online-Order">
                         <div class="card-block">
                             <h5>Pendientes</h5>
-                            <h6 class="text-muted d-flex align-items-center justify-content-between m-t-30">Pago pendiente<span class="float-end f-18 text-c-purple">100 / 500</span></h6>
+                            <h6 class="text-muted d-flex align-items-center justify-content-between m-t-30">Pago pendiente<span class="float-end f-18 text-c-purple">{{ $pending }} / {{ $total }}</span></h6>
                             <div class="progress mt-3">
-                                <div class="progress-bar progress-c-yellow" role="progressbar" style="width:50%;height:6px;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar progress-c-yellow" role="progressbar" style="
+                                    @if($total != 0)
+                                        width:{{ number_format(($pending / $total) * 100, 2 ) }}%;
+                                    @else
+                                        width: 0;
+                                    @endif
+                                    height:6px;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                            <span class="text-muted mt-2 d-block">20% Pendiente</span>
+                            <span class="text-muted mt-2 d-block">
+                                 @if($total != 0)
+                                    {{ number_format(($pending / $total) * 100, 2 ) }}% Pendiente
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -121,18 +142,27 @@
                     <div class="card Online-Order">
                         <div class="card-block">
                             <h5>Canceladas</h5>
-                            <h6 class="text-muted d-flex align-items-center justify-content-between m-t-30">Rechazadas<span class="float-end f-18 text-c-blue">50 / 400</span></h6>
+                            <h6 class="text-muted d-flex align-items-center justify-content-between m-t-30">Rechazadas<span class="float-end f-18 text-c-blue">{{ $candeled }} / {{ $total }}</span></h6>
                             <div class="progress mt-3">
-                                <div class="progress-bar progress-c-red" role="progressbar" style="width:40%;height:6px;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar progress-c-red" role="progressbar" style="
+                                    @if($total != 0)
+                                        width:{{ number_format(($candeled / $total) * 100, 2 ) }}%;
+                                    @else
+                                        width: 0;
+                                    @endif
+                                    height:6px;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                            <span class="text-muted mt-2 d-block">10% Cancelado</span>
+                            <span class="text-muted mt-2 d-block">
+                                 @if($total != 0)
+                                    {{ number_format(($candeled / $total) * 100, 2 ) }}% Cancelado</span>
+                                @endif
                         </div>
                     </div>
                 </div>
 
             </div>
             <!-- Fin graficos -->
-
+            @endadmin
 
             <!-- [ Main Content ] end -->
         </div>
