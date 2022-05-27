@@ -36,6 +36,7 @@ class Order extends Model
         'city',
         'region',
         'payment_method',
+        'brand_id',
         'brand_name',
         'channel',
         'total'
@@ -44,5 +45,50 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function getOrdersByUserBrand(bool $is_paginate = true)
+    {
+        $user = auth()->user();
+
+        if ($user->can('super')) {
+            if ($is_paginate) {
+                $orders = Order::paginate(10);
+            } else {
+                $orders = Order::all();
+            }
+        } else {
+            $brand_id = $user->primary_brand_id;
+
+            if ($user->can('admin')) {
+                $parents = Brand::select('id')
+                    ->where('id', $brand_id)
+                    ->orWhere('parent_id', $brand_id);
+
+                if ($is_paginate) {
+                    $orders = Order::whereIn('brand_id', $parents)->paginate(
+                        10
+                    );
+                } else {
+                    $orders = Order::whereIn('brand_id', $parents)->get();
+                }
+            } else {
+                $parents = Brand::select('id')
+                    ->where('id', $brand_id)
+                    ->orWhere('parent_id', $brand_id);
+
+                if ($is_paginate) {
+                    $orders = Order::whereIn('brand_id', $parents)
+                        ->where('user_id', $user->id)
+                        ->paginate(10);
+                } else {
+                    $orders = Order::whereIn('brand_id', $parents)
+                        ->where('user_id', $user->id)
+                        ->get();
+                }
+            }
+        }
+
+        return $orders;
     }
 }

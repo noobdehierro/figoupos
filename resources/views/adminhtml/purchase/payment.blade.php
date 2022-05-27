@@ -27,10 +27,10 @@
                                 <h5 class="mt-1 mb-3 border-b-2">Métodos de pago</h5>
                                 <hr>
                                 <input type="hidden" name="payment_method" id="payment_method" value="">
-                                <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
-                                <input type="hidden" name="user_name" id="user_name" value="{{ Auth::user()->name }}">
-                                @if(Auth::user()->sales_limit > $order->total)
-                                    @if($balance && $balance->balance > 0)
+                                <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
+                                <input type="hidden" name="user_name" id="user_name" value="{{ auth()->user()->name }}">
+                                @if(auth()->user()->sales_limit > auth()->user()->account->amount + $order->total)
+                                    @if($balance && $balance->balance > $order->total)
                                     <button id="cash" class="btn btn-primary" type="button" data-payment="Efectivo">Efectivo</button>
                                     @endif
                                     <button id="card" class="btn btn-primary" type="button" data-payment="Tarjeta">Tarjeta de crédito/débito</button>

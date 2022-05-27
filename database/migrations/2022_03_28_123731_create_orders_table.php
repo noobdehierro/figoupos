@@ -38,6 +38,8 @@ class CreateOrdersTable extends Migration
             $table->string('region')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('payment_id')->nullable();
+            $table->string('reference_id')->nullable();
+            $table->unsignedBigInteger('brand_id')->nullable();
             $table->string('brand_name')->default('Figou');
             $table->string('channel')->default('pos');
             $table->decimal('total')->default(0);
@@ -48,6 +50,12 @@ class CreateOrdersTable extends Migration
                 ->references('id')
                 ->on('users')
                 ->restrictOnDelete();
+
+            $table
+                ->foreign('brand_id')
+                ->references('id')
+                ->on('brands')
+                ->nullOnDelete();
         });
     }
 

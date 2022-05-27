@@ -16,6 +16,9 @@ $(function () {
     $('#postcode').mask('00000');
     $('.postcode').mask('00000');
     $('.cp').mask('00000');
+    $('.exp').mask('00');
+    $('.card_cvv').mask('000');
+    $('.card_number').mask('0000000000000000');
 
     $(document).ajaxSend(function () {
         $('#overlay').fadeIn(300);

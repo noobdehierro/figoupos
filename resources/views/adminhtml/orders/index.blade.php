@@ -17,6 +17,9 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                        @admin
+                                            <th>Marca</th>
+                                        @endadmin
                                         <th>Cliente</th>
                                         <th>Tipo</th>
                                         <th>Método de pago</th>
@@ -30,6 +33,9 @@
                                     @foreach($orders as $order)
                                         <tr>
                                             <td>{{ $order->id }}</td>
+                                            @admin
+                                                <td>{{ $order->brand_name }}</td>
+                                            @endadmin
                                             <td>{{ $order->name }} {{ $order->lastname }}</td>
                                             <td>{{ $order->sales_type }}</td>
                                             <td>{{ $order->payment_method }}</td>

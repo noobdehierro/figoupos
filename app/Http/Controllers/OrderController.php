@@ -14,15 +14,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-
-        if ($user->role_id <= 2) {
-            $orders = Order::latest()->paginate(10);
-        } else {
-            $orders = Order::where('user_id', auth()->user()->id)
-                ->latest()
-                ->paginate(10);
-        }
+        $orders = Order::getOrdersByUserBrand();
 
         return view('adminhtml.orders.index', ['orders' => $orders]);
     }

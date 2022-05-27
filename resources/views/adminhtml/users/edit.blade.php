@@ -30,23 +30,20 @@
                                 <div class="row">
                                     <x-form-input name="sales_limit" type="number" value="{{ $user->sales_limit }}" size="s" group="$">Limite de venta</x-form-input>
                                 </div>
-
-                                @if( Auth::user()->role_id === 1)
-                                    <div class="row">
-                                        <x-form-select name="role_id" label="Rol" size="s">
-                                            @foreach($roles as $role)
-                                                <option value="{{ $role->id }}" {{ (old('role_id', $user->role_id)) == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
-                                            @endforeach
-                                        </x-form-select>
-                                    </div>
-                                    <div class="row">
-                                        <x-form-select name="brand_id" label="Marca" size="s">
-                                            @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}" {{ (old('brand_id', $user->brand_id)) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
-                                            @endforeach
-                                        </x-form-select>
-                                    </div>
-                                @endif
+                                <div class="row">
+                                    <x-form-select name="role_id" label="Rol" size="s">
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}" {{ (old('role_id', $user->role_id)) == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
+                                        @endforeach
+                                    </x-form-select>
+                                </div>
+                                <div class="row">
+                                    <x-form-select name="brand_id" label="Marca" size="s">
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}" {{ (old('brand_id', $user->brand_id)) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                        @endforeach
+                                    </x-form-select>
+                                </div>
                                 <div class="row">
                                     <x-form-switch name="is_active" checked="{{ $user->is_active }}" size="s">Activo</x-form-switch>
                                 </div>

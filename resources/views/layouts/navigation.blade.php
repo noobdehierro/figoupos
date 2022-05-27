@@ -30,39 +30,42 @@
 
                 <x-nav-link route="orders.index" icon="credit-card" group="orders">Ordenes</x-nav-link>
 
-                <li class="nav-item pcoded-menu-caption">
-                    <label>Reportes</label>
-                </li>
+                @super
+                    <li class="nav-item pcoded-menu-caption">
+                        <label>Reportes</label>
+                    </li>
 
-                <x-nav-link route="orders.index" icon="trending-up" group="">Ventas</x-nav-link>
-                <x-nav-link route="orders.index" icon="user-check" group="">Vendedores</x-nav-link>
+                    <x-nav-link route="orders.index" icon="trending-up" group="">Ventas</x-nav-link>
+                    <x-nav-link route="orders.index" icon="user-check" group="">Vendedores</x-nav-link>
 
-                <li class="nav-item pcoded-menu-caption">
-                    <label>Catálogo</label>
-                </li>
+                    <li class="nav-item pcoded-menu-caption">
+                        <label>Catálogo</label>
+                    </li>
+                @endsuper
 
                 <x-nav-link route="offerings.index" icon="grid" group="offerings">Ofertas</x-nav-link>
 
-                @if( Auth::user()->role_id  <= 2)
+                @distr
                     <li class="nav-item pcoded-menu-caption">
                         <label>Administración</label>
                     </li>
 
                     <x-nav-link route="users.index" icon="users" group="users">Usuarios</x-nav-link>
-                    <x-nav-link route="balances.index" icon="sliders" group="balances">Saldo</x-nav-link>
                     @admin
+                        <x-nav-link route="balances.index" icon="sliders" group="balances">Saldo</x-nav-link>
+                        <x-nav-link route="accounts.index" icon="briefcase" group="accounts">Cuentas</x-nav-link>
                         <x-nav-link route="brands.index" icon="tag" group="brands">Marcas</x-nav-link>
                     @endadmin
 
-                    @admin
+                    @super
                         <li class="nav-item pcoded-menu-caption">
                             <label>Sistema</label>
                         </li>
 
                         <x-nav-link route="configurations.index" icon="settings" group="configurations">Configuración</x-nav-link>
                         <x-nav-link route="configurations.index" icon="cloud" group="api">API</x-nav-link>
-                    @endadmin
-                @endif
+                    @endsuper
+                @enddistr
             </ul>
         </div>
     </div>

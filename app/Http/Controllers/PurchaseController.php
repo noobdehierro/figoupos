@@ -6,6 +6,7 @@ use App\Mail\OrderPurchase;
 use App\Mail\PortabilityRequest;
 use App\Models\Balance;
 use App\Models\Configuration;
+use App\Models\Movement;
 use App\Models\Offering;
 use App\Models\Order;
 use App\Models\Portability;
@@ -23,21 +24,36 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $offerings = Offering::all();
+        $account = auth()->user()->account;
 
-        try {
-            $order = Order::where([
-                ['status', '=', 'Pending'],
-                ['sales_type', '=', 'Contratación'],
-                ['user_id', '=', auth()->user()->id]
-            ])->first();
+        if ($account) {
+            $offerings = Offering::all();
+
+            try {
+                $order = Order::where([
+                    ['status', '=', 'Pending'],
+                    ['sales_type', '=', 'Contratación'],
+                    ['user_id', '=', auth()->user()->id]
+                ])->first();
+
+                return view('adminhtml.purchase.index', [
+                    'offerings' => $offerings,
+                    'order' => $order
+                ]);
+            } catch (\Exception $exception) {
+                return back()->with('error', $exception->getMessage());
+            }
+        } else {
+            $offerings = [];
+            $order = [];
 
             return view('adminhtml.purchase.index', [
                 'offerings' => $offerings,
                 'order' => $order
-            ]);
-        } catch (\Exception $exception) {
-            return back()->with('error', $exception->getMessage());
+            ])->with(
+                'infoMsg',
+                'Usted no tiene una cuenta activa para realizar movimientos.'
+            );
         }
     }
 
@@ -65,6 +81,7 @@ class PurchaseController extends Controller
             'user_id' => 'nullable',
             'user_name' => 'required',
             'qv_offering_id' => 'required',
+            'brand_id' => 'required',
             'brand_name' => 'required',
             'total' => 'required',
             'channel' => 'required',
@@ -150,7 +167,9 @@ class PurchaseController extends Controller
      */
     public function payment(Order $order)
     {
-        $balance = Balance::latest()->first();
+        $balance = Balance::where('brand_id', auth()->user()->primary_brand_id)
+            ->latest()
+            ->first();
 
         $conekta_public_key = self::getConektaPublicConfiguration();
 
@@ -181,12 +200,15 @@ class PurchaseController extends Controller
         ]);
 
         try {
-            $lastBalance = Balance::latest()->first();
+            $lastBalance = Balance::where('brand_id', $order->brand_id)
+                ->latest()
+                ->first();
             $newBalance = new Balance();
 
             $order->payment_method = $request->payment_method;
 
             if ($order->payment_method == 'Efectivo') {
+                $newBalance->brand_id = $order->brand_id;
                 $newBalance->amount = -abs($order->total);
                 $newBalance->balance =
                     $lastBalance->balance + $newBalance->amount;
@@ -198,11 +220,20 @@ class PurchaseController extends Controller
             }
 
             $user = User::find($request->user_id);
-            $user->sales_limit = $user->sales_limit - $order->total;
+            $currentUserAmount = $user->account->amount;
+            $newUserAmount = $currentUserAmount + $order->total;
+            $user->account->amount = $newUserAmount;
+
+            $movement = new Movement();
+            $movement->account_id = $user->account->id;
+            $movement->amount = $order->total;
+            $movement->description = 'Cobro de efectivo';
+            $movement->operation = 'Contratación';
 
             $order->update();
-            $newBalance->update();
-            $user->update();
+            $newBalance->save();
+            $movement->save();
+            $user->account->update();
 
             self::purchaseNotification($order);
         } catch (\Exception $exception) {
@@ -304,7 +335,6 @@ class PurchaseController extends Controller
                     $order->status = 'Complete';
 
                     $user = auth()->user();
-                    $user->sales_limit = $user->sales_limit - $order->total;
 
                     $order->update();
                     $user->update();

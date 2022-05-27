@@ -23,6 +23,8 @@
                             </x-offering>
                         @endforeach
                             <x-form id="rechage_store" action="{{ route('recharges.store') }}" method="POST">
+                                <x-form-input name="brand_id" type="hidden" value="{{ auth()->user()->primary_brand_id }}"></x-form-input>
+                                <x-form-input name="brand_name" type="hidden" value="{{ auth()->user()->brand->name }}"></x-form-input>
                                 <x-form-input name="qv_offering_id" type="hidden" value=""></x-form-input>
                                 <x-form-input name="msisdn" type="hidden" value="{{ $msisdn }}"></x-form-input>
                                 <x-form-input name="total" type="hidden" value=""></x-form-input>

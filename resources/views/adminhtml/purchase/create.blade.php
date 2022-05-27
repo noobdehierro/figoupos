@@ -33,8 +33,9 @@
                                         <div class="row">
                                             <x-form-input name="status" type="hidden" value="Pending"></x-form-input>
                                             <x-form-input name="sales_type" type="hidden" value="Contratación"></x-form-input>
-                                            <x-form-input name="user_name" type="hidden" value="{{ Auth::user()->name }}"></x-form-input>
+                                            <x-form-input name="user_name" type="hidden" value="{{ auth()->user()->name }}"></x-form-input>
                                             <x-form-input name="qv_offering_id" type="hidden" value="{{ $offering->qv_offering_id }}"></x-form-input>
+                                            <x-form-input name="brand_id" type="hidden" value="{{ auth()->user()->primary_brand_id }}"></x-form-input>
                                             <x-form-input name="brand_name" type="hidden" value="{{ $offering->brand->name }}"></x-form-input>
                                             <x-form-input name="total" type="hidden" value="{{ $offering->price }}"></x-form-input>
                                             <x-form-input name="channel" type="hidden" value="POS"></x-form-input>

@@ -21,6 +21,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Nombre</th>
+                                            <th>Padre</th>
                                             <th>Descripción</th>
                                             <th>Logo</th>
                                             <th>Activo</th>
@@ -32,6 +33,13 @@
                                         <tr>
                                             <td>{{ $brand->id }}</td>
                                             <td>{{ $brand->name }}</td>
+                                            <td>
+                                                @if($brand->parent_id)
+                                                    {{ $brand->parent->name }}
+                                                @else
+                                                    --
+                                                @endif
+                                            </td>
                                             <td>{{ $brand->description }}</td>
                                             <td>
                                                 @if ($brand->logo)

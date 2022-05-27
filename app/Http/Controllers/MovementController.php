@@ -2,34 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movement;
 use Illuminate\Http\Request;
-use App\Models\Order;
 
-class DashboardController extends Controller
+class MovementController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $user = auth()->user();
-
-        $orders = Order::getOrdersByUserBrand();
-
-        $complete = Order::where('status', 'Complete')->count();
-        $pending = Order::where('status', 'Pending')->count();
-        $canceled = Order::where('status', 'Canceled')->count();
-        $total = Order::count();
-
-        return view('adminhtml.dashboard', [
-            'orders' => $orders,
-            'complete' => $complete,
-            'pending' => $pending,
-            'candeled' => $canceled,
-            'total' => $total
-        ]);
+        //
     }
 
     /**
@@ -56,10 +41,10 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Movement $movement)
     {
         //
     }
@@ -67,10 +52,10 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Movement $movement)
     {
         //
     }
@@ -79,10 +64,10 @@ class DashboardController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Movement $movement)
     {
         //
     }
@@ -90,10 +75,10 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Movement $movement)
     {
         //
     }

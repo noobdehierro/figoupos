@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\OrderRecharge;
 use App\Models\Balance;
 use App\Models\Configuration;
+use App\Models\Movement;
 use App\Models\Offering;
 use App\Models\Order;
 use App\Models\User;
@@ -21,15 +22,28 @@ class RechargeController extends Controller
      */
     public function index()
     {
-        $order = Order::where([
-            ['status', '=', 'Pending'],
-            ['sales_type', '=', 'Recarga'],
-            ['user_id', '=', auth()->user()->id]
-        ])->first();
+        $account = auth()->user()->account;
 
-        return view('adminhtml.recharges.index', [
-            'order' => $order
-        ]);
+        if ($account) {
+            $order = Order::where([
+                ['status', '=', 'Pending'],
+                ['sales_type', '=', 'Recarga'],
+                ['user_id', '=', auth()->user()->id]
+            ])->first();
+
+            return view('adminhtml.recharges.index', [
+                'order' => $order
+            ]);
+        } else {
+            $order = [];
+
+            return view('adminhtml.recharges.index', [
+                'order' => $order
+            ])->with(
+                'infoMsg',
+                'Usted no tiene una cuenta activa para realizar movimientos.'
+            );
+        }
     }
 
     /**
@@ -128,6 +142,9 @@ class RechargeController extends Controller
             $order->user_name = auth()->user()->name;
             $order->qv_offering_id = $request->qv_offering_id;
             $order->msisdn = $request->msisdn;
+            $order->brand_id = $request->brand_id;
+            $order->brand_name = $request->brand_name;
+            $order->channel = 'POS';
             $order->total = $request->total;
             $order->save();
             return redirect()
@@ -171,7 +188,9 @@ class RechargeController extends Controller
      */
     public function payment(Order $order)
     {
-        $balance = Balance::latest()->first();
+        $balance = Balance::where('brand_id', auth()->user()->primary_brand_id)
+            ->latest()
+            ->first();
 
         $conekta_public_key = self::getConektaPublicConfiguration();
 
@@ -181,10 +200,13 @@ class RechargeController extends Controller
             'public_key' => $conekta_public_key
         ];
 
+        $openpay = self::getOpenpayPublicConfiguration();
+
         return view('adminhtml.recharges.payment', [
             'order' => $order,
             'balance' => $balance,
-            'conekta' => $conekta
+            'conekta' => $conekta,
+            'openpay' => $openpay
         ]);
     }
 
@@ -222,12 +244,15 @@ class RechargeController extends Controller
         ]);
 
         try {
-            $lastBalance = Balance::latest()->first();
-            $newBalance = new Balance();
+            if ($request->payment_method === 'Efectivo') {
+                $lastBalance = Balance::where('brand_id', $order->brand_id)
+                    ->latest()
+                    ->first();
 
-            $order->payment_method = $request->payment_method;
+                $newBalance = new Balance();
 
-            if ($order->payment_method == 'Efectivo') {
+                $order->payment_method = $request->payment_method;
+                $newBalance->brand_id = $order->brand_id;
                 $newBalance->amount = -abs($order->total);
                 $newBalance->balance =
                     $lastBalance->balance + $newBalance->amount;
@@ -236,19 +261,142 @@ class RechargeController extends Controller
                 $newBalance->user_name = $request->user_name;
                 $newBalance->description = 'Recarga';
                 $order->status = 'Complete';
+
+                $user = User::find($request->user_id);
+                $currentUserAmount = $user->account->amount;
+                $newUserAmount = $currentUserAmount + $order->total;
+                $user->account->amount = $newUserAmount;
+
+                $movement = new Movement();
+                $movement->account_id = $user->account->id;
+                $movement->amount = $order->total;
+                $movement->description = 'Cobro de efectivo';
+                $movement->operation = 'Recarga';
+
+                $order->update();
+                $newBalance->save();
+                $movement->save();
+                $user->account->update();
+            } else {
+                $configuration = Configuration::wherein('code', [
+                    'is_sandbox',
+                    'qvantel_baskets_endpoint',
+                    'qvantel_baskets_endpoint_sandbox'
+                ])->get();
+
+                foreach ($configuration as $config) {
+                    if ($config->code == 'is_sandbox') {
+                        $is_sandbox = $config->value;
+                    }
+                    if ($config->code == 'qvantel_baskets_endpoint') {
+                        $endpoint_live = $config->value;
+                    }
+                    if ($config->code == 'qvantel_baskets_endpoint_sandbox') {
+                        $endpoint_sandbox = $config->value;
+                    }
+                }
+
+                if ($is_sandbox === 'true') {
+                    $endpoint = $endpoint_sandbox;
+                } else {
+                    $endpoint = $endpoint_live;
+                }
+
+                $basketBody = [
+                    'basket' => [
+                        'basketItems' => [
+                            [
+                                'quantity' => 1,
+                                'msisdn' => '52' . $order->msisdn,
+                                'productId' => $order->qv_offering_id
+                            ]
+                        ]
+                    ]
+                ];
+
+                $basket = Http::withHeaders([
+                    'x-channel' => 'self-service'
+                ])
+                    ->withBody(json_encode($basketBody), 'json')
+                    ->post($endpoint . 'paymentIntent');
+
+                if ($basket->successful()) {
+                    $basketResponse = json_decode($basket);
+
+                    if (!isset($basketResponse->errors)) {
+                        $basketId =
+                            $basketResponse->basketsPaymentIntent->basketSummary
+                                ->basketId;
+
+                        $paymentBody = [
+                            'basket' => [
+                                'paymentMethod' => [
+                                    'paymentMethodType' =>
+                                        'openpay-credit-card',
+                                    'params' => [
+                                        [
+                                            'name' => 'deviceSessionId',
+                                            'value' => $request->deviceSessionId
+                                        ],
+                                        [
+                                            'name' => 'cardToken',
+                                            'value' => $request->cardToken
+                                        ],
+                                        [
+                                            'name' => 'description',
+                                            'value' =>
+                                                'Recarga ' . $order->brand_name
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ];
+
+                        $paymentIntent = Http::withHeaders([
+                            'x-channel' => 'self-service'
+                        ])
+                            ->withBody(json_encode($paymentBody), 'json')
+                            ->post($endpoint . $basketId . '/paymentIntent');
+
+                        $paymentResponse = json_decode($paymentIntent);
+
+                        $referenceId =
+                            $paymentResponse->basketsPaymentIntent
+                                ->basketSummary->referenceNumber;
+                        $paymentId =
+                            $paymentResponse->basketsPaymentIntent
+                                ->paymentIntent->result[0]->value;
+
+                        $order->payment_method = $request->payment_method;
+                        $order->payment_id = $paymentId;
+                        $order->reference_id = $referenceId;
+                        $order->status = 'Complete';
+
+                        $user = User::find($request->user_id);
+                        $user->sales_limit = $user->sales_limit - $order->total;
+
+                        $order->update();
+                        $user->update();
+                    } else {
+                        throw new \Exception($basketResponse->error->message);
+                    }
+                } else {
+                    throw new \Exception(
+                        'Sucedio un error al recuperar la información.'
+                    );
+                }
+
+                if (isset($responseObject->error)) {
+                    throw new \Exception(
+                        'Sucedio un error al recuperar la información.'
+                    );
+                }
             }
-
-            $user = User::find($request->user_id);
-            $user->sales_limit = $user->sales_limit - $order->total;
-
-            $order->update();
-            $newBalance->update();
-            $user->update();
-
-            self::rechargeNotification($order);
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
+
+        self::rechargeNotification($order);
 
         return redirect()
             ->route('orders.index')
@@ -454,5 +602,55 @@ class RechargeController extends Controller
         }
 
         return $conekta_public_key;
+    }
+
+    /**
+     * Returns the Openpay public key according to the sandbox configuration
+     *
+     * @return mixed
+     */
+    private function getOpenpayPublicConfiguration()
+    {
+        $configuration = Configuration::wherein('code', [
+            'is_sandbox',
+            'openpay_merchant_id_sandbox',
+            'openpay_merchant_id',
+            'openpay_public_key_sandbox',
+            'openpay_public_key'
+        ])->get();
+
+        foreach ($configuration as $config) {
+            if ($config->code == 'is_sandbox') {
+                $is_sandbox = $config->value;
+            }
+            if ($config->code == 'openpay_merchant_id_sandbox') {
+                $openpay_merchant_id_sandbox = $config->value;
+            }
+            if ($config->code == 'openpay_merchant_id') {
+                $openpay_merchant_id_production = $config->value;
+            }
+            if ($config->code == 'openpay_public_key_sandbox') {
+                $openpay_public_key_sandbox = $config->value;
+            }
+            if ($config->code == 'openpay_public_key') {
+                $openpay_public_key_production = $config->value;
+            }
+        }
+
+        if ($is_sandbox === 'true') {
+            $openpay_merchant_id = $openpay_merchant_id_sandbox;
+            $openpay_public_key = $openpay_public_key_sandbox;
+        } else {
+            $openpay_merchant_id = $openpay_merchant_id_production;
+            $openpay_public_key = $openpay_public_key_production;
+        }
+
+        $openpay = [
+            'merchant_id' => $openpay_merchant_id,
+            'public_key' => $openpay_public_key,
+            'is_sandbox' => $is_sandbox
+        ];
+
+        return $openpay;
     }
 }

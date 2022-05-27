@@ -1,4 +1,7 @@
 <x-app-layout>
+    @if(!empty($infoMsg))
+        <x-flash type="warning" dismiss="yes">{{ $infoMsg }}</x-flash>
+    @endif
     <div class="card">
         <div class="card-header top-card">
             <h5>Recarga</h5>
@@ -61,30 +64,30 @@
                 <!-- [ Main Content ] end -->
             </div>
         </div>
-    @else
-        <div class="main-body">
-            <div class="page-wrapper">
-                <!-- [ Main Content ] start -->
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card user-list">
-                            <div class="card-block pb-0">
-                                <x-form action="{{ route('recharges.offerings') }}">
-                                    <div class="row">
-                                        <x-form-input name="msisdn" required="true" size="s" type="tel">Teléfono a recargar</x-form-input><br/>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <button class="btn  btn-primary" type="submit">Siguiente</button>
+        @elseif(empty($infoMsg))
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <!-- [ Main Content ] start -->
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card user-list">
+                                <div class="card-block pb-0">
+                                    <x-form action="{{ route('recharges.offerings') }}">
+                                        <div class="row">
+                                            <x-form-input name="msisdn" required="true" size="s" type="tel">Teléfono a recargar</x-form-input><br/>
                                         </div>
-                                    </div>
-                                </x-form>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <button class="btn  btn-primary" type="submit">Siguiente</button>
+                                            </div>
+                                        </div>
+                                    </x-form>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- [ Main Content ] end -->
                 </div>
-                <!-- [ Main Content ] end -->
             </div>
-        </div>
     @endif
 </x-app-layout>

@@ -32,6 +32,7 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Marca</th>
                                         <th>Tipo de operación</th>
                                         <th>Usuario</th>
                                         <th>Descripción</th>
@@ -44,6 +45,7 @@
                                     @foreach($balances as $balance)
                                         <tr>
                                             <td>{{ $balance->id }}</td>
+                                            <td>{{ $balance->brand->name }}</td>
                                             <td>{{ $balance->operation }}</td>
                                             <td>{{ $balance->user_name }}</td>
                                             <td>{{ $balance->description }}</td>

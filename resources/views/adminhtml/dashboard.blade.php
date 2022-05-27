@@ -52,6 +52,9 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
+                                        @admin
+                                            <th>Marca</th>
+                                        @endadmin
                                         <th>Nombre</th>
                                         <th>Tipo</th>
                                         <th>Método de pago</th>
@@ -62,6 +65,9 @@
                                     <tbody>
                                     @foreach($orders as $order)
                                         <tr>
+                                            @admin
+                                                <td>{{ $order->brand_name }}</td>
+                                            @endadmin
                                             <td>
                                                 <h6 class="mb-1">{{ $order->name . ' ' . $order->lastname }}</h6>
                                             </td>
@@ -91,7 +97,7 @@
             </div>
             <!-- Fin ordenes recientes -->
 
-            @admin
+            @super
             <!-- Graficos -->
             <div class="row">
                 <div class="col-md-6 col-xl-4">
@@ -162,7 +168,7 @@
 
             </div>
             <!-- Fin graficos -->
-            @endadmin
+            @endsuper
 
             <!-- [ Main Content ] end -->
         </div>

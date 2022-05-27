@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBalancesTable extends Migration
+class CreateMovementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,18 @@ class CreateBalancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('balances', function (Blueprint $table) {
+        Schema::create('movements', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('brand_id');
+            $table->unsignedBigInteger('account_id');
             $table->decimal('amount');
-            $table->decimal('balance');
-            $table->string('operation');
-            $table->unsignedBigInteger('user_id');
-            $table->string('user_name');
             $table->string('description');
+            $table->string('operation');
             $table->timestamps();
 
             $table
-                ->foreign('brand_id')
+                ->foreign('account_id')
                 ->references('id')
-                ->on('brands')
+                ->on('accounts')
                 ->onDelete('cascade');
         });
     }
@@ -39,6 +36,6 @@ class CreateBalancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('balances');
+        Schema::dropIfExists('movements');
     }
 }

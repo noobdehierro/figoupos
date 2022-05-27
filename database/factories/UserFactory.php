@@ -17,7 +17,8 @@ class UserFactory extends Factory
         return [
             'name' => 'Roberto Guzman',
             'role_id' => 1,
-            'brand_id' => 0,
+            'brand_id' => 1,
+            'primary_brand_id' => 1,
             'sales_limit' => 1000,
             'email' => 'roberto.guzman@leancommerce.mx',
             'email_verified_at' => now(),

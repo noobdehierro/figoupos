@@ -21,6 +21,7 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Marca</th>
                                         <th>Nombre</th>
                                         <th>Correo electrónico</th>
                                         <th>Rol</th>
@@ -37,6 +38,7 @@
                                         @else
                                             <tr>
                                                 <td>{{ $user->id }}</td>
+                                                <td>{{ $user->brand->name }}</td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->role->name }}</td>

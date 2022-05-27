@@ -94,6 +94,11 @@
                             <table class="table table-borderless">
                                 <tbody>
                                 <tr class="text-dark">
+                                    <td>MSISDN</td>
+                                    <td>:</td>
+                                    <td class="text-c-blue">{{ $order->msisdn }}</td>
+                                </tr>
+                                <tr class="text-dark">
                                     <td>IMEI</td>
                                     <td>:</td>
                                     <td>{{ $order->imei }}</td>
@@ -122,7 +127,7 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-block">
-                            <h5 class="mt-1 mb-3">Producto</h5>
+                            <h5 class="mt-1 mb-3">Pago</h5>
                             <table class="table table-borderless">
                                 <tbody>
                                 <tr class="text-dark">
@@ -131,9 +136,14 @@
                                     <td class="text-c-blue">{{ $order->payment_method }}</td>
                                 </tr>
                                 <tr class="text-dark">
-                                    <td>Referencia</td>
+                                    <td>Id de pago</td>
                                     <td>:</td>
                                     <td class="text-c-blue">{{ $order->payment_id }}</td>
+                                </tr>
+                                <tr class="text-dark">
+                                    <td>Referencia</td>
+                                    <td>:</td>
+                                    <td class="text-c-blue">{{ $order->reference_id }}</td>
                                 </tr>
                                 <tr class="text-dark">
                                     <td>ID</td>

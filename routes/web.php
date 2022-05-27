@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CompatibilityController;
 use App\Http\Controllers\PortabilityController;
 use Illuminate\Support\Facades\Route;
@@ -137,12 +138,13 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::resource('balances', BalanceController::class)
         ->only(['index', 'create', 'store'])
-        ->middleware('can:super');
+        ->middleware('can:admin');
     Route::resource(
         'configurations',
         ConfigurationController::class
     )->middleware('can:super');
     Route::resources([
+        'accounts' => AccountController::class,
         'users' => UserController::class,
         'offerings' => OfferingController::class,
         'brands' => BrandController::class,

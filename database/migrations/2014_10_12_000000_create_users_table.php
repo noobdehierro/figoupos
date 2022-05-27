@@ -16,7 +16,8 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('role_id');
-            $table->unsignedBigInteger('brand_id')->nullable()->default(3);
+            $table->unsignedBigInteger('brand_id')->nullable();
+            $table->unsignedBigInteger('primary_brand_id')->nullable();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -26,12 +27,24 @@ class CreateUsersTable extends Migration
             $table->boolean('is_active')->default(1);
             $table->timestamps();
 
-
             // Foreign Keys
-            $table->foreign('role_id')
+            $table
+                ->foreign('role_id')
                 ->references('id')
                 ->on('roles')
                 ->onDelete('cascade');
+
+            $table
+                ->foreign('brand_id')
+                ->references('id')
+                ->on('brands')
+                ->nullOnDelete();
+
+            $table
+                ->foreign('primary_brand_id')
+                ->references('id')
+                ->on('brands')
+                ->nullOnDelete();
         });
     }
 

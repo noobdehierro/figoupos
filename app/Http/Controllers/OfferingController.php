@@ -4,18 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Offering;
 use App\Models\Brand;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Self_;
 
 class OfferingController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
-        $offerings = Offering::paginate(25);
+        $offerings = Offering::getOfferingsByUserBrand();
 
         return view('adminhtml.offerings.index', ['offerings' => $offerings]);
     }
@@ -37,6 +39,7 @@ class OfferingController extends Controller
      */
     public function create()
     {
+        self::checkPermissions();
         $brands = Brand::all();
 
         return view('adminhtml.offerings.create', ['brands' => $brands]);
@@ -68,13 +71,13 @@ class OfferingController extends Controller
             $offering->price = $request->price;
             $offering->brand_id = $request->brand_id;
             $offering->save();
-
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 
-        return redirect()->route('offerings.index')
-            ->with('success','Ha guardado los cambios.');
+        return redirect()
+            ->route('offerings.index')
+            ->with('success', 'Ha guardado los cambios.');
     }
 
     /**
@@ -96,9 +99,14 @@ class OfferingController extends Controller
      */
     public function edit(Offering $offering)
     {
+        self::checkPermissions();
+
         $brands = Brand::all();
 
-        return view('adminhtml.offerings.edit', ['offering' => $offering, 'brands' => $brands]);
+        return view('adminhtml.offerings.edit', [
+            'offering' => $offering,
+            'brands' => $brands
+        ]);
     }
 
     /**
@@ -127,13 +135,13 @@ class OfferingController extends Controller
             $offering->price = $request->price;
             $offering->brand_id = $request->brand_id;
             $offering->save();
-
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 
-        return redirect()->route('offerings.index')
-            ->with('success','Ha guardado los cambios.');
+        return redirect()
+            ->route('offerings.index')
+            ->with('success', 'Ha guardado los cambios.');
     }
 
     /**
@@ -146,6 +154,21 @@ class OfferingController extends Controller
     {
         $offering->delete();
 
-        return redirect()->route('offerings.index')->with('success', 'El recuso se elimino con exito.');
+        return redirect()
+            ->route('offerings.index')
+            ->with('success', 'El recuso se elimino con exito.');
+    }
+
+    private function checkPermissions()
+    {
+        if (
+            !auth()
+                ->user()
+                ->can('super')
+        ) {
+            abort(403);
+        }
+
+        return Response::allow();
     }
 }

@@ -43,8 +43,8 @@ class AppServiceProvider extends ServiceProvider
             return $user->role_id <= 3;
         });
 
-        Gate::define('dist', function (User $user) {
-            return $user->role_id === 4;
+        Gate::define('distr', function (User $user) {
+            return $user->role_id <= 4;
         });
 
         Blade::if('super', function () {
