@@ -91,4 +91,33 @@ class Order extends Model
 
         return $orders;
     }
+
+    public function scopeFilterOrders($query, array $filters)
+    {
+
+        $query->when($filters['initDate'], function ($query) use ($filters) {
+            $query->when($filters['endDate'], function ($query) use ($filters) {
+                $query->whereBetween('created_at', [
+                    $filters['initDate'],
+                    $filters['endDate']
+                ]);
+            }, function ($query) use ($filters) {
+                $query->where('created_at', '>=', $filters['initDate']);
+            });
+        });
+
+        $query->when($filters['payment_method'], function ($query) use ($filters) {
+            if($filters['payment_method'] == 'null'){
+                $query->whereNull('payment_method');
+            }else{
+                $query->where('payment_method', $filters['payment_method']);
+            }
+        });
+
+        $query->when($filters['sales_type'], function ($query) use ($filters) {
+           $query->where('sales_type', $filters['sales_type']);
+        });
+
+
+    }
 }

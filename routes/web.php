@@ -20,6 +20,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RechargeController;
+use App\Http\Controllers\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -171,6 +172,23 @@ Route::middleware('auth')->group(function () {
     Route::view('/tools/coverage', 'adminhtml.tools.coverage.index')->name(
         'coverage.index'
     );
+
+    /**  sales  / ventas   */
+
+    Route::get('/sales', [
+        SalesController::class,
+        'index'
+    ])->name('sales.index');
+
+    Route::get('/sales/orders/{order?}', [
+        SalesController::class,
+        'show'
+    ])->name('sales.show');
+
+    Route::get('/sales/orders/{order}/export', [
+        SalesController::class,
+        'export'
+    ])->name('sales.export');
 });
 
 /** Auth Routes */

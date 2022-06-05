@@ -35,7 +35,7 @@
                         <label>Reportes</label>
                     </li>
 
-                    <x-nav-link route="orders.index" icon="trending-up" group="">Ventas</x-nav-link>
+                    <x-nav-link route="sales.index" icon="trending-up" group="sales">Ventas</x-nav-link>
                     <x-nav-link route="orders.index" icon="user-check" group="">Vendedores</x-nav-link>
 
                     <li class="nav-item pcoded-menu-caption">
