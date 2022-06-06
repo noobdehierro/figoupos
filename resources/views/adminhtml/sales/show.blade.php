@@ -2,12 +2,14 @@
     <div class="card">
         <div class="card-header top-card">
             <h5>Gestor de usuarios</h5>
-            <a id="add" href="{{ route('users.create') }}" title="Add New" type="button" class="btn btn-primary top-card-link" data-ui-id="add-button">
-                <span>Añadir usuario</span>
+            <a id="add" href="/sales/orders/export/?{{ http_build_query(request()->except('_token', '_method')) == '' ? 'data=all' : http_build_query(request()->except('_token', '_method')) }}"
+                title="Add New" type="button" class="btn btn-primary top-card-link" data-ui-id="add-button">
+                <span>exportar</span>
             </a>
         </div>
     </div>
 
+    {{-- /sales/orders/export/{{ http_build_query(request()->except('_token', '_method')) == '' ? 'data=all' : http_build_query(request()->except('_token', '_method')) }} --}}
 
     <div class="main-body">
         <div class="page-wrapper">
@@ -41,7 +43,7 @@
                                                 </td>
                                                 <td>{{ $order->sales_type }} </td>
                                                 <td>{{ $order->total }}</td>
-                                                <td>{{$order->created_at}}</td>
+                                                <td>{{ $order->created_at }}</td>
                                                 <td>{{ $order->brand_name }}</td>
                                                 <td>{{ $order->user_name }}</td>
                                             </tr>

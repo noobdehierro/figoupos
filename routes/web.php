@@ -180,12 +180,12 @@ Route::middleware('auth')->group(function () {
         'index'
     ])->name('sales.index');
 
-    Route::get('/sales/orders/{order?}', [
+    Route::get('/sales/orders', [
         SalesController::class,
         'show'
     ])->name('sales.show');
 
-    Route::get('/sales/orders/{order}/export', [
+    Route::get('/sales/orders/export', [
         SalesController::class,
         'export'
     ])->name('sales.export');

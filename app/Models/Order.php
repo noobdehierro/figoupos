@@ -95,8 +95,8 @@ class Order extends Model
     public function scopeFilterOrders($query, array $filters)
     {
 
-        $query->when($filters['initDate'], function ($query) use ($filters) {
-            $query->when($filters['endDate'], function ($query) use ($filters) {
+        $query->when($filters['initDate'] ?? false, function ($query) use ($filters) {
+            $query->when($filters['endDate'] ?? false, function ($query) use ($filters) {
                 $query->whereBetween('created_at', [
                     $filters['initDate'],
                     $filters['endDate']
@@ -106,7 +106,7 @@ class Order extends Model
             });
         });
 
-        $query->when($filters['payment_method'], function ($query) use ($filters) {
+        $query->when($filters['payment_method'] ?? false, function ($query) use ($filters) {
             if($filters['payment_method'] == 'null'){
                 $query->whereNull('payment_method');
             }else{
@@ -114,7 +114,7 @@ class Order extends Model
             }
         });
 
-        $query->when($filters['sales_type'], function ($query) use ($filters) {
+        $query->when($filters['sales_type'] ?? false, function ($query) use ($filters) {
            $query->where('sales_type', $filters['sales_type']);
         });
 
