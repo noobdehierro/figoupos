@@ -36,7 +36,7 @@
                     </li>
 
                     <x-nav-link route="sales.index" icon="trending-up" group="sales">Ventas</x-nav-link>
-                    <x-nav-link route="orders.index" icon="user-check" group="">Vendedores</x-nav-link>
+                    <x-nav-link route="vendors.index" icon="user-check" group="vendors">Vendedores</x-nav-link>
 
                     <li class="nav-item pcoded-menu-caption">
                         <label>Catálogo</label>

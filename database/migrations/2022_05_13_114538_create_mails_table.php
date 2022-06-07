@@ -16,7 +16,7 @@ class CreateMailsTable extends Migration
         Schema::create('mails', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->unsignedBigInteger('brand_id');
+            $table->unsignedBigInteger('brand_id')->unique();
             $table->string('driver');
             $table->string('host');
             $table->string('port');

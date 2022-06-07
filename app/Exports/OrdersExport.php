@@ -34,7 +34,7 @@ class OrdersExport implements FromQuery, ShouldAutoSize, WithHeadings
     {
 
         $orden = Order::latest()
-            ->addSelect('id', 'status', 'payment_method', 'sales_type', 'total', 'created_at', 'brand_name', 'user_name')
+            ->Select('id', 'status', 'payment_method', 'sales_type', 'total', 'created_at', 'brand_name', 'user_name')
             ->filterOrders(request(['initDate', 'endDate', 'payment_method', 'sales_type']));
 
         return $orden;

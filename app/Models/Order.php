@@ -41,6 +41,8 @@ class Order extends Model
         'channel',
         'total'
     ];
+    protected $with = ['user'];
+
 
     public function user()
     {
@@ -120,4 +122,38 @@ class Order extends Model
 
 
     }
+
+    public function scopeFilterVendors($query, array $filters)
+    {
+
+        $query->when($filters['initDate'] ?? false, function ($query) use ($filters) {
+            $query->when($filters['endDate'] ?? false, function ($query) use ($filters) {
+                $query->whereBetween('created_at', [
+                    $filters['initDate'],
+                    $filters['endDate']
+                ]);
+            }, function ($query) use ($filters) {
+                $query->where('created_at', '>=', $filters['initDate']);
+            });
+        });
+
+        $query->when($filters['payment_method'] ?? false, function ($query) use ($filters) {
+            if($filters['payment_method'] == 'null'){
+                $query->whereNull('payment_method');
+            }else{
+                $query->where('payment_method', $filters['payment_method']);
+            }
+        });
+
+        $query->when($filters['sales_type'] ?? false, function ($query) use ($filters) {
+           $query->where('sales_type', $filters['sales_type']);
+        });
+
+        $query->when($filters['user_name'] ?? false, function ($query) use ($filters) {
+            $query->where('user_name', $filters['user_name']);
+        });
+
+
+    }
+
 }
