@@ -42,10 +42,10 @@ class Brand extends Model
                 $brands = Brand::all();
             }
         } else {
-            $brand_id = $user->brand_id;
+            $brand_id = $user->primary_brand_id;
 
             if ($is_paginate) {
-                $brands = Brand::where('parent_id', $brand_id)->paginate(10);
+                $brands = Brand::where('id', $brand_id)->paginate(10);
             } else {
                 $brands = Brand::where('id', '=', $brand_id)->get();
             }

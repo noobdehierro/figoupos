@@ -47,6 +47,14 @@ class AppServiceProvider extends ServiceProvider
             return $user->role_id <= 4;
         });
 
+        Gate::define('seller', function (User $user) {
+            return $user->role_id <= 5;
+        });
+
+        Gate::define('limited', function (User $user) {
+            return $user->role_id === 6;
+        });
+
         Blade::if('super', function () {
             return request()
                 ->user()
@@ -69,6 +77,18 @@ class AppServiceProvider extends ServiceProvider
             return request()
                 ->user()
                 ->can('distr');
+        });
+
+        Blade::if('seller', function () {
+            return request()
+                ->user()
+                ->can('seller');
+        });
+
+        Blade::if('limited', function () {
+            return request()
+                ->user()
+                ->can('limited');
         });
     }
 }

@@ -70,11 +70,11 @@ class AccountController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Account  $account
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show(Account $account)
     {
-        //
+        return view('adminhtml.accounts.show', ['account' => $account]);
     }
 
     /**

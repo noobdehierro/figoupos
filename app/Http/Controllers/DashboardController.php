@@ -16,6 +16,10 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        if ($user->can('limited')) {
+            return view('adminhtml.tools.compatibility.index');
+        }
+
         $orders = Order::getOrdersByUserBrand();
 
         $complete = Order::where('status', 'Complete')->count();
