@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Mail;
 use Illuminate\Http\Request;
 
@@ -10,21 +11,24 @@ class MailController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $mails = Mail::all();
+
+        return view('adminhtml.mails.index', ['mails' => $mails]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
-        //
+        $brands = Brand::select('id', 'name')->get();
+        return view('adminhtml.mails.create', ['brands' => $brands]);
     }
 
     /**
@@ -35,7 +39,18 @@ class MailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $attributes = $this->validateMail();
+
+        $attributes['driver'] = 'smtp';
+
+        try {
+             Mail::create($attributes);
+            return redirect()->route('mails.index')->with('success', 'Mail created successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('mails.index')->with('error', 'Mail not created');
+        }
+
     }
 
     /**
@@ -46,7 +61,8 @@ class MailController extends Controller
      */
     public function show(Mail $mail)
     {
-        //
+        return $this->edit($mail);
+
     }
 
     /**
@@ -57,7 +73,10 @@ class MailController extends Controller
      */
     public function edit(Mail $mail)
     {
-        //
+        $brands = Brand::select('id', 'name')->get();
+
+        return view('adminhtml.mails.edit', ['mail' => $mail, 'brands' => $brands]);
+
     }
 
     /**
@@ -69,7 +88,15 @@ class MailController extends Controller
      */
     public function update(Request $request, Mail $mail)
     {
-        //
+        $attributes = $this->validateMail($mail);
+
+        try {
+            $mail->update($attributes);
+            return redirect()->route('mails.index')->with('success', 'Mail updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('mails.index')->with('error', 'Mail not updated');
+        }
+
     }
 
     /**
@@ -80,6 +107,32 @@ class MailController extends Controller
      */
     public function destroy(Mail $mail)
     {
-        //
+        try {
+            $mail->delete();
+            return redirect()->route('mails.index')->with('success', 'Mail deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('mails.index')->with('error', 'Mail not deleted');
+        }
+
+    }
+
+    protected function validateMail(?Mail $mail = null): array
+    {
+        $mail = $mail ?? new Mail();
+
+        return request()->validate([
+            'description' => 'required',
+            'brand_id' => 'required | unique:mails,brand_id,' . $mail->id,
+            'host' => 'required',
+            'port' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'encryption' => 'required',
+            'from_address' => 'required',
+            'from_name' => 'required',
+        ], [
+            'brand_id.unique' => 'Esta marca ya tiene un correo configurado',
+        ]);
+
     }
 }

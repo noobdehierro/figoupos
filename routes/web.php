@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RechargeController;
 use App\Http\Controllers\SalesController;
@@ -150,7 +151,9 @@ Route::middleware('auth')->group(function () {
         'users' => UserController::class,
         'offerings' => OfferingController::class,
         'brands' => BrandController::class,
-        'tools/portability' => PortabilityController::class
+        'tools/portability' => PortabilityController::class,
+        'mails' => MailController::class,
+
     ]);
 
     Route::get('/profile/{user}', [UserController::class, 'profile'])->name(
