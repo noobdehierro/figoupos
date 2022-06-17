@@ -20,14 +20,14 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Marca</th>
-                                        <th>Nombre</th>
-                                        <th>Correo electrónico</th>
-                                        <th>Rol</th>
-                                        <th>Limite disponible</th>
-                                        <th>Fecha de creación</th>
-                                        <th>Activo</th>
+                                        <th>@sortablelink('id','#')</th>
+                                        <th>@sortablelink('brand.name','marca')</th>
+                                        <th>@sortablelink('name','nombre')</th>
+                                        <th>@sortablelink('email','Correo electrónico')</th>
+                                        <th>@sortablelink('role.name','rol')</th>
+                                        <th>@sortablelink('sales_limit','Limite disponible')</th>
+                                        <th>@sortablelink('created_at','fecha de creación')</th>
+                                        <th>@sortablelink('is_active','Activo')</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
@@ -55,7 +55,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $users->links() !!}
+                                {!! $users->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

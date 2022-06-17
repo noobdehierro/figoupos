@@ -20,16 +20,16 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            {{-- <th>#</th> --}}
-                                            <th>description</th>
-                                            <th>brand_id</th>
+                                            <th>@sortablelink('id', '#')</th>
+                                            <th>@sortablelink('description', 'Descripción')</th>
+                                            <th>@sortablelink('brand.name', 'Marca')</th>
                                             {{-- <th>driver</th>
                                             <th>host</th> --}}
-                                            <th>port</th>
-                                            <th>username</th>
-                                            <th>encryption</th>
-                                            <th>from_address</th>
-                                            <th>from_name</th>
+                                            <th>@sortablelink('port', 'Puerto')</th>
+                                            <th>@sortablelink('username', 'Usuario')</th>
+                                            <th>@sortablelink('encryption','encryption')</th>
+                                            <th>@sortablelink('from_address', 'From')</th>
+                                            <th>@sortablelink('from_name', 'From Name')</th>
                                             <th>Acción</th>
 
 
@@ -38,7 +38,7 @@
                                     <tbody>
                                         @foreach ($mails as $mail)
                                             <tr>
-                                                {{-- <td>{{ $mail->id }}</td> --}}
+                                                <td>{{ $mail->id }}</td>
                                                 <td>{{ $mail->description }}</td>
                                                 <td>{{ $mail->brand->name }}</td>
                                                 {{-- <td>{{ $mail->driver }}</td>
@@ -61,7 +61,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {{-- {!! $brands->links() !!} --}}
+                                {!! $mails->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

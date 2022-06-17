@@ -19,11 +19,11 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Usuario</th>
-                                            <th>Nombre de la cuenta</th>
-                                            <th>Saldo disponible</th>
-                                            <th>Activo</th>
+                                            <th>@sortablelink('id','#')</th>
+                                            <th>@sortablelink('user.name','usuario')</th>
+                                            <th>@sortablelink('name','Nombre de la cuenta')</th>
+                                            <th>@sortablelink('amount','Saldo disponible')</th>
+                                            <th>@sortablelink('is_active','activo')</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
@@ -44,7 +44,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $accounts->links() !!}
+                                {!! $accounts->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

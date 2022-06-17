@@ -17,7 +17,7 @@ class PortabilityController extends Controller
      */
     public function index()
     {
-        $portabilities = Portability::paginate(25);
+        $portabilities = Portability::sortable()->paginate(25);
 
         return view('adminhtml.tools.portability.index', [
             'portabilities' => $portabilities

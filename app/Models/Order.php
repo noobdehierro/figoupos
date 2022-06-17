@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
+
 
 class Order extends Model
 {
     use HasFactory;
+    use Sortable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +45,18 @@ class Order extends Model
         'channel',
         'total'
     ];
+
+    public $sortable = [
+        'id',
+        'brand_name',
+        'name',
+        'sales_type',
+        'payment_method',
+        'status',
+        'total',
+        'created_at'
+    ];
+
     protected $with = ['user'];
 
 
@@ -55,7 +71,7 @@ class Order extends Model
 
         if ($user->can('super')) {
             if ($is_paginate) {
-                $orders = Order::paginate(10);
+                $orders = Order::sortable()->paginate(5);
             } else {
                 $orders = Order::all();
             }
@@ -68,7 +84,7 @@ class Order extends Model
                     ->orWhere('parent_id', $brand_id);
 
                 if ($is_paginate) {
-                    $orders = Order::whereIn('brand_id', $parents)->paginate(
+                    $orders = Order::whereIn('brand_id', $parents)->sortable()->paginate(
                         10
                     );
                 } else {
@@ -82,7 +98,7 @@ class Order extends Model
                 if ($is_paginate) {
                     $orders = Order::whereIn('brand_id', $parents)
                         ->where('user_id', $user->id)
-                        ->paginate(10);
+                        ->sortable()->paginate(10);
                 } else {
                     $orders = Order::whereIn('brand_id', $parents)
                         ->where('user_id', $user->id)
@@ -109,18 +125,16 @@ class Order extends Model
         });
 
         $query->when($filters['payment_method'] ?? false, function ($query) use ($filters) {
-            if($filters['payment_method'] == 'null'){
+            if ($filters['payment_method'] == 'null') {
                 $query->whereNull('payment_method');
-            }else{
+            } else {
                 $query->where('payment_method', $filters['payment_method']);
             }
         });
 
         $query->when($filters['sales_type'] ?? false, function ($query) use ($filters) {
-           $query->where('sales_type', $filters['sales_type']);
+            $query->where('sales_type', $filters['sales_type']);
         });
-
-
     }
 
     public function scopeFilterVendors($query, array $filters)
@@ -138,22 +152,19 @@ class Order extends Model
         });
 
         $query->when($filters['payment_method'] ?? false, function ($query) use ($filters) {
-            if($filters['payment_method'] == 'null'){
+            if ($filters['payment_method'] == 'null') {
                 $query->whereNull('payment_method');
-            }else{
+            } else {
                 $query->where('payment_method', $filters['payment_method']);
             }
         });
 
         $query->when($filters['sales_type'] ?? false, function ($query) use ($filters) {
-           $query->where('sales_type', $filters['sales_type']);
+            $query->where('sales_type', $filters['sales_type']);
         });
 
         $query->when($filters['user_name'] ?? false, function ($query) use ($filters) {
             $query->where('user_name', $filters['user_name']);
         });
-
-
     }
-
 }

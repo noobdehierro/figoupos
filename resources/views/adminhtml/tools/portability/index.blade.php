@@ -19,11 +19,11 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Nombre</th>
-                                        <th>Email</th>
-                                        <th>Número a portar</th>
-                                        <th>Fecha</th>
+                                        <th>@sortablelink('id', '#')</th>
+                                        <th>@sortablelink('fullname', 'Nombre')</th>
+                                        <th>@sortablelink('email', 'Email')</th>
+                                        <th>@sortablelink('msisdn', 'Número a portar')</th>
+                                        <th>@sortablelink('created_at', 'Fecha de solicitud')</th>
                                         <th>Acción</th>
                                     </tr>
                                     </thead>
@@ -44,7 +44,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $portabilities->links() !!}
+                                {!! $portabilities->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

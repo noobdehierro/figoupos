@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Kyslik\ColumnSortable\Sortable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +27,15 @@ class User extends Authenticatable
         'primary_brand_id',
         'sales_limit',
         'is_active'
+    ];
+
+    public $sortable = [
+        'id',
+        'name',
+        'email',
+        'sales_limit',
+        'is_active',
+        'created_at',
     ];
 
     /**
@@ -71,7 +82,7 @@ class User extends Authenticatable
 
         if ($user->can('super')) {
             if ($is_paginate) {
-                $users = User::paginate(10);
+                $users = User::sortable()->paginate(10);
             } else {
                 $users = User::all();
             }
@@ -82,7 +93,7 @@ class User extends Authenticatable
                 ->orWhere('id', $brand_id);
 
             if ($is_paginate) {
-                $users = User::whereIn('brand_id', $parents)->paginate();
+                $users = User::whereIn('brand_id', $parents)->sortable()->paginate();
             } else {
                 $users = User::whereIn('brand_id', $parents)->get();
             }

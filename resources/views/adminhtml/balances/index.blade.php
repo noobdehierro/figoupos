@@ -31,14 +31,14 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Marca</th>
-                                        <th>Tipo de operación</th>
-                                        <th>Usuario</th>
-                                        <th>Descripción</th>
-                                        <th>Monto</th>
-                                        <th>Saldo total</th>
-                                        <th>Fecha</th>
+                                        <th>@sortablelink('id','#')</th>
+                                        <th>@sortablelink('brand.name','marca')</th>
+                                        <th>@sortablelink('operation','tipo de operación')</th>
+                                        <th>@sortablelink('user_name','usuario')</th>
+                                        <th>@sortablelink('description','descripción')</th>
+                                        <th>@sortablelink('amount','monto')</th>
+                                        <th>@sortablelink('balance','saldo total')</th>
+                                        <th>@sortablelink('created_at','fecha')</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -58,7 +58,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $balances->links() !!}
+                                {!! $balances->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

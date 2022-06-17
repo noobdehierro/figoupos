@@ -16,16 +16,16 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>@sortablelink('id', '#')</th>
                                         @admin
-                                            <th>Marca</th>
+                                            <th>@sortablelink('brand_name','Marca')</th>
                                         @endadmin
-                                        <th>Cliente</th>
-                                        <th>Tipo</th>
-                                        <th>Método de pago</th>
-                                        <th>Estatus</th>
-                                        <th>Total</th>
-                                        <th>Fecha</th>
+                                        <th>@sortablelink('name','Cliente')</th>
+                                        <th>@sortablelink('sales_type','Tipo de venta')</th>
+                                        <th>@sortablelink('payment_method','Método de pago')</th>
+                                        <th>@sortablelink('status','Estatus')</th>
+                                        <th>@sortablelink('total','Total')</th>
+                                        <th>@sortablelink('created_at','Fecha')</th>
                                         <th>Acción</th>
                                     </tr>
                                     </thead>
@@ -51,7 +51,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $orders->links() !!}
+                                {!! $orders->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

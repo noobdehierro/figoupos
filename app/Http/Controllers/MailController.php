@@ -15,7 +15,7 @@ class MailController extends Controller
      */
     public function index()
     {
-        $mails = Mail::all();
+        $mails = Mail::sortable()->paginate(5);
 
         return view('adminhtml.mails.index', ['mails' => $mails]);
     }
