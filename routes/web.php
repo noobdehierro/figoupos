@@ -176,6 +176,10 @@ Route::middleware('auth')->group(function () {
     Route::view('/tools/coverage', 'adminhtml.tools.coverage.index')->name(
         'coverage.index'
     );
+    Route::post('/tools/compatibility/checkjquery', [
+        CompatibilityController::class,
+        'checkjquery'
+    ])->name('compatibility.checkjquery');
 
     /**  sales  / ventas   */
 
