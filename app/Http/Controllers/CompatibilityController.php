@@ -54,6 +54,31 @@ class CompatibilityController extends Controller
         }
     }
 
+    public function checkjquery(Request $request)
+    {
+        try {
+            $token = self::altanGetToken()->accessToken;
+
+            $configuration = Configuration::wherein('code', [
+                'altan_device_info_endpoint',
+                'altan_identificator'
+            ])->get();
+
+            $response = Http::withToken($token)->get($configuration[0]->value, [
+                'identifierValue' => $request->imei,
+                'identifierType' => $configuration[1]->value
+            ]);
+
+            $device = json_decode($response);
+
+            //ddd($device->deviceFeatures->band28);
+
+            return $device;
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     protected function altanGetToken()
     {
         $configuration = Configuration::wherein('code', [

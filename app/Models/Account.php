@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 class Account extends Model
 {
     use HasFactory;
+    use Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +19,13 @@ class Account extends Model
     protected $fillable = [
         'user_id',
         'brand_id',
+        'name',
+        'amount',
+        'is_active'
+    ];
+
+    public $sortable = [
+        'id',
         'name',
         'amount',
         'is_active'
@@ -37,7 +46,7 @@ class Account extends Model
 
         if ($user->can('super')) {
             if ($is_paginate) {
-                $accounts = Account::paginate(10);
+                $accounts = Account::sortable()->paginate(10);
             } else {
                 $accounts = Account::all();
             }
@@ -45,7 +54,7 @@ class Account extends Model
             $brand_id = $user->primary_brand_id;
 
             if ($is_paginate) {
-                $accounts = Account::where('brand_id', $brand_id)->paginate(10);
+                $accounts = Account::where('brand_id', $brand_id)->sortable()->paginate(10);
             } else {
                 $accounts = Account::where('brand_id', $brand_id)->get();
             }

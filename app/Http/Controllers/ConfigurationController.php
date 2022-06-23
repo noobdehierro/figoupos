@@ -15,7 +15,7 @@ class ConfigurationController extends Controller
      */
     public function index()
     {
-        $configurations = Configuration::paginate(25);
+        $configurations = Configuration::sortable()->paginate(25);
         return view('adminhtml.configurations.index', [
             'configurations' => $configurations
         ]);

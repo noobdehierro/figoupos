@@ -20,7 +20,7 @@ class BalanceController extends Controller
                 ->user()
                 ->can('super')
         ) {
-            $balances = Balance::orderBy('id', 'desc')->paginate(10);
+            $balances = Balance::sortable()->orderBy('id', 'desc')->paginate(10);
             $last = 0;
         } else {
             $balances = Balance::where(
