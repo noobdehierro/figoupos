@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Brand;
 use App\Models\Role;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -19,7 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::getUsersByBrand();
 
         return view('adminhtml.users.index', ['users' => $users]);
     }
@@ -31,8 +32,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        $brands = Brand::all();
-        $roles = Role::all();
+        $brands = User::getBrandsByUserBrand(false);
+        $roles = User::getRolesByRole();
 
         return view('adminhtml.users.create', [
             'brands' => $brands,
@@ -51,6 +52,7 @@ class UserController extends Controller
         $attributes = $request->validate([
             'role_id' => ['required', Rule::exists('roles', 'id')],
             'brand_id' => ['nullable', Rule::exists('brands', 'id')],
+            'primary_brand_id' => ['nullable', Rule::exists('brands', 'id')],
             'name' => ['required', 'string', 'max:225'],
             'email' => [
                 'required',
@@ -97,8 +99,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $brands = Brand::all();
-        $roles = Role::all();
+        self::checkPermissions($user);
+
+        $brands = User::getBrandsByUserBrand(false);
+        $roles = User::getRolesByRole();
 
         return view('adminhtml.users.edit', [
             'user' => $user,
@@ -206,5 +210,21 @@ class UserController extends Controller
         }
 
         return back()->with('success', 'Ha guardado los cambios.');
+    }
+
+    private function checkPermissions($user)
+    {
+        $current = auth()->user();
+
+        if (!$current->can('super')) {
+            if (
+                $user->brand_id != $current->brand_id &&
+                $current->brand_id != $user->brand->parent_id
+            ) {
+                abort(403);
+            }
+        }
+
+        return Response::allow();
     }
 }

@@ -46,17 +46,26 @@
                                     </x-form-select>
                                 </div>
                                 <div class="row">
-                                    <x-form-input name="sales_limit" type="number" size="s">Limite de venta</x-form-input>
+                                    <x-form-input name="sales_limit" type="number" size="s" group="$">Limite de venta</x-form-input>
                                 </div>
-                                @if( Auth::user()->role_id === 1)
+                                <div class="row">
+                                    <x-form-select name="brand_id" label="Marca" size="s">
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                        @endforeach
+                                    </x-form-select>
+                                </div>
+                                @super
                                     <div class="row">
-                                        <x-form-select name="brand_id" label="Marca" size="s">
+                                        <x-form-select name="primary_brand_id" label="Marca primaria" size="s">
                                             @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}" {{ old('primary_brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                                             @endforeach
                                         </x-form-select>
                                     </div>
-                                @endif
+                                @else
+                                    <input type="hidden" name="primary_brand_id" value="{{ Auth::user()->primary_brand_id }}" />
+                                @endsuper
                                 <div class="row">
                                     <x-form-switch name="is_active" checked="true" size="s">Activo</x-form-switch>
                                 </div>

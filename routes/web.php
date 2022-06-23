@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CompatibilityController;
 use App\Http\Controllers\PortabilityController;
 use Illuminate\Support\Facades\Route;
@@ -17,8 +18,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RechargeController;
+use App\Http\Controllers\SalesController;
+use App\Http\Controllers\VendorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +89,11 @@ Route::middleware('auth')->group(function () {
         'update'
     ])->name('purchase.update');
 
+    Route::put('/purchase/{order}/conekta', [
+        PurchaseController::class,
+        'conektaOrder'
+    ])->name('purchase.conekta');
+
     /** Recargas */
     Route::get('/recharges', [RechargeController::class, 'index'])->name(
         'recharges.index'
@@ -109,6 +118,16 @@ Route::middleware('auth')->group(function () {
         'update'
     ])->name('recharges.update');
 
+    Route::put('/recharges/{order}/confirm', [
+        RechargeController::class,
+        'confirm'
+    ])->name('recharges.confirm');
+
+    Route::put('/recharges/{order}/conekta', [
+        RechargeController::class,
+        'conektaOrder'
+    ])->name('recharges.conekta');
+
     /** Users */
     Route::get('/users', function () {
         return view('adminhtml.users.index');
@@ -126,12 +145,15 @@ Route::middleware('auth')->group(function () {
     Route::resource(
         'configurations',
         ConfigurationController::class
-    )->middleware('can:admin');
+    )->middleware('can:super');
     Route::resources([
+        'accounts' => AccountController::class,
         'users' => UserController::class,
         'offerings' => OfferingController::class,
         'brands' => BrandController::class,
-        'tools/portability' => PortabilityController::class
+        'tools/portability' => PortabilityController::class,
+        'mails' => MailController::class,
+
     ]);
 
     Route::get('/profile/{user}', [UserController::class, 'profile'])->name(
@@ -154,6 +176,45 @@ Route::middleware('auth')->group(function () {
     Route::view('/tools/coverage', 'adminhtml.tools.coverage.index')->name(
         'coverage.index'
     );
+    Route::post('/tools/compatibility/checkjquery', [
+        CompatibilityController::class,
+        'checkjquery'
+    ])->name('compatibility.checkjquery');
+
+    /**  sales  / ventas   */
+
+    Route::get('/sales', [
+        SalesController::class,
+        'index'
+    ])->name('sales.index');
+
+    Route::get('/sales/orders', [
+        SalesController::class,
+        'show'
+    ])->name('sales.show');
+
+    Route::get('/sales/orders/export', [
+        SalesController::class,
+        'export'
+    ])->name('sales.export');
+
+
+    /**  vendors  / vendedores   */
+
+    Route::get('/vendors', [
+        VendorController::class,
+        'index'
+    ])->name('vendors.index');
+
+    Route::get('/vendors/orders', [
+        VendorController::class,
+        'show'
+    ])->name('vendors.show');
+
+    Route::get('/vendors/orders/export', [
+        VendorController::class,
+        'export'
+    ])->name('vendors.export');
 });
 
 /** Auth Routes */

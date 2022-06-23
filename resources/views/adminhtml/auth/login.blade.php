@@ -17,7 +17,7 @@
                 </div>
             @endif
             <div class="input-group mb-3">
-                <input type="email" name="email" id="email" class="form-control" placeholder="Correo electrónico" value="{{ old('email') }}" >
+                <input type="email" name="email" id="email" class="form-control" placeholder="Correo electrónico" value="{{ old('email') }}" autofocus>
             </div>
             <div class="input-group mb-4">
                 <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña">

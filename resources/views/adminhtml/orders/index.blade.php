@@ -16,13 +16,16 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Cliente</th>
-                                        <th>Tipo</th>
-                                        <th>Método de pago</th>
-                                        <th>Estatus</th>
-                                        <th>Total</th>
-                                        <th>Fecha</th>
+                                        <th>@sortablelink('id', '#')</th>
+                                        @admin
+                                            <th>@sortablelink('brand_name','Marca')</th>
+                                        @endadmin
+                                        <th>@sortablelink('name','Cliente')</th>
+                                        <th>@sortablelink('sales_type','Tipo de venta')</th>
+                                        <th>@sortablelink('payment_method','Método de pago')</th>
+                                        <th>@sortablelink('status','Estatus')</th>
+                                        <th>@sortablelink('total','Total')</th>
+                                        <th>@sortablelink('created_at','Fecha')</th>
                                         <th>Acción</th>
                                     </tr>
                                     </thead>
@@ -30,10 +33,13 @@
                                     @foreach($orders as $order)
                                         <tr>
                                             <td>{{ $order->id }}</td>
+                                            @admin
+                                                <td>{{ $order->brand_name }}</td>
+                                            @endadmin
                                             <td>{{ $order->name }} {{ $order->lastname }}</td>
                                             <td>{{ $order->sales_type }}</td>
                                             <td>{{ $order->payment_method }}</td>
-                                            <td class="@if ($order->status == 'Completado')text-c-green @elseif($order->status == 'Canceled') text-c-red @else text-c-yellow @endif">{{ $order->status }}</td>
+                                            <td class="@if ($order->status == 'Complete')text-c-green @elseif($order->status == 'Canceled') text-c-red @else text-c-yellow @endif">{{ $order->status }}</td>
                                             <td>{{ $order->total }}</td>
                                             <td>{{ $order->created_at }}</td>
                                             <td>
@@ -45,7 +51,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $orders->links() !!}
+                                {!! $orders->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

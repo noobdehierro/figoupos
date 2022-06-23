@@ -1,11 +1,13 @@
 <x-app-layout>
-    <div class="card">
-        <div class="card-header top-card">
-            <a id="add" href="{{ route('offerings.create') }}" title="Add New" type="button" class="btn btn-primary top-card-link" data-ui-id="add-button">
-                <span>Añadir oferta</span>
-            </a>
+    @super
+        <div class="card">
+            <div class="card-header top-card">
+                <a id="add" href="{{ route('offerings.create') }}" title="Add New" type="button" class="btn btn-primary top-card-link" data-ui-id="add-button">
+                    <span>Añadir oferta</span>
+                </a>
+            </div>
         </div>
-    </div>
+    @endsuper
     <div class="row">
         @foreach($offerings as $offering)
             <x-offering id="{{ $offering->id }}" brand="{{ $offering->brand->name }}">

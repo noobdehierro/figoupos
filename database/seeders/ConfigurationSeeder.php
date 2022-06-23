@@ -88,6 +88,22 @@ class ConfigurationSeeder extends Seeder
                 'is_protected' => true
             ],
             [
+                'label' => 'Qvantel Baskets Endpoint',
+                'code' => 'qvantel_baskets_endpoint',
+                'value' =>
+                    'https://api-figou-prod.qvantel.solutions/uc/v0/v3/baskets/',
+                'group' => 'Qvantel',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Qvantel Baskets Endpoint Sandbox',
+                'code' => 'qvantel_baskets_endpoint_sandbox',
+                'value' =>
+                    'https://mapp-sayco-preprod.qvantel.systems/uc/v0/v3/baskets/',
+                'group' => 'Qvantel',
+                'is_protected' => true
+            ],
+            [
                 'label' => 'Conekta Public API Key',
                 'code' => 'conekta_public_api_key',
                 'value' => 'key_ZR2XVAqpQ94q6idcdCikjGw',
@@ -112,6 +128,48 @@ class ConfigurationSeeder extends Seeder
                 'label' => 'Conekta Private API Key Sandbox',
                 'code' => 'conekta_private_api_key_sandbox',
                 'value' => 'key_Lt9L1PSxYzirGhryU6RHQA',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Openpay Merchant ID Sandbox',
+                'code' => 'openpay_merchant_id_sandbox',
+                'value' => 'm2j4m875mooh87bjxhzv',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Openpay Private Key Sandbox',
+                'code' => 'openpay_private_key_sandbox',
+                'value' => 'sk_25a16f3b4d9b40c9943c064049aa4060',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Conekta Public API Key Sandbox',
+                'code' => 'openpay_public_key_sandbox',
+                'value' => 'pk_6ec233a43c294377a2a6b9016acdcb23',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Openpay Merchant ID',
+                'code' => 'openpay_merchant_id',
+                'value' => 'm9awzr1utinzflc89siw',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Openpay Private Key',
+                'code' => 'openpay_private_key',
+                'value' => 'sk_b0384dca105e4b4989fe4c2712ffd737',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Openpay Public API Key',
+                'code' => 'openpay_public_key',
+                'value' => 'pk_8dcd63b64cbe4f019bd8222263564431',
                 'group' => 'Payment',
                 'is_protected' => true
             ]

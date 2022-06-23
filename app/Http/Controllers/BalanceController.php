@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Balance;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 
 class BalanceController extends Controller
@@ -10,12 +11,29 @@ class BalanceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
-        $balances = Balance::orderBy('id', 'desc')->paginate(10);
-        $last = Balance::latest()->first();
+        if (
+            auth()
+                ->user()
+                ->can('super')
+        ) {
+            $balances = Balance::sortable()->orderBy('id', 'desc')->paginate(10);
+            $last = 0;
+        } else {
+            $balances = Balance::where(
+                'brand_id',
+                '=',
+                auth()->user()->brand->id
+            )
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+            $last = Balance::where('brand_id', '=', auth()->user()->brand->id)
+                ->latest()
+                ->first();
+        }
 
         $current = $last ? $last->balance : 0;
 
@@ -28,11 +46,12 @@ class BalanceController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function create()
     {
-        return view('adminhtml.balances.create');
+        $brands = Brand::all();
+        return view('adminhtml.balances.create', ['brands' => $brands]);
     }
 
     /**
@@ -44,6 +63,7 @@ class BalanceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'brand_id' => 'required',
             'amount' => 'required|numeric',
             'description' => 'nullable',
             'operation' => 'required'
@@ -59,6 +79,7 @@ class BalanceController extends Controller
             }
 
             $balance = new Balance();
+            $balance->brand_id = $request->brand_id;
             $balance->amount = (float) $request->amount;
             $balance->balance = $prevAmount + (float) $request->amount;
             $balance->operation = $request->operation;

@@ -19,12 +19,12 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Nombre</th>
-                                        <th>Código</th>
-                                        <th>Valor</th>
-                                        <th>Grupo</th>
-                                        <th>Protegida</th>
+                                        <th>@sortablelink('id','#')
+                                        <th>@sortablelink('label', 'Nombre')</th>
+                                        <th>@sortablelink('code', 'Código')</th>
+                                        <th>@sortablelink('value', 'Valor')</th>
+                                        <th>@sortablelink('group', 'Grupo')</th>
+                                        <th>@sortablelink('is_protected', 'Protegida')</th>
                                         <th>Acción</th>
                                     </tr>
                                     </thead>
@@ -45,7 +45,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="6">
+                                            <td colspan="7">
                                                 <x-flash type="warning">No hay configuraciones</x-flash>
                                             </td>
                                         </tr>
@@ -54,7 +54,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $configurations->links() !!}
+                                {!! $configurations->appends(\Request::except('page'))->render()!!}
                             </div>
                         </div>
                     </div>

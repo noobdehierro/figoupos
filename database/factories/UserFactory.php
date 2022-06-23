@@ -17,11 +17,14 @@ class UserFactory extends Factory
         return [
             'name' => 'Roberto Guzman',
             'role_id' => 1,
-            'brand_id' => 0,
+            'brand_id' => 1,
+            'primary_brand_id' => 1,
+            'sales_limit' => 1000,
             'email' => 'roberto.guzman@leancommerce.mx',
             'email_verified_at' => now(),
-            'password' => '$2y$10$jPNQiy5hnP4Vqk9inlnh1Ob06capgEo5xxG9HX7hJQ8yaSa2yzTCe', // Admin1234
-            'remember_token' => Str::random(10),
+            'password' =>
+                '$2y$10$jPNQiy5hnP4Vqk9inlnh1Ob06capgEo5xxG9HX7hJQ8yaSa2yzTCe', // Admin1234
+            'remember_token' => Str::random(10)
         ];
     }
 
@@ -34,7 +37,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'email_verified_at' => null,
+                'email_verified_at' => null
             ];
         });
     }

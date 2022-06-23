@@ -19,11 +19,12 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Nombre</th>
-                                            <th>Descripción</th>
+                                            <th>@sortablelink('id', '#')</th>
+                                            <th>@sortablelink('name', 'Nombre')</th>
+                                            <th>@sortablelink('parent.name', 'Padre')</th>
+                                            <th>@sortablelink('description', 'Descripción')</th>
                                             <th>Logo</th>
-                                            <th>Activo</th>
+                                            <th>@sortablelink('is_active','activo')</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
@@ -32,6 +33,13 @@
                                         <tr>
                                             <td>{{ $brand->id }}</td>
                                             <td>{{ $brand->name }}</td>
+                                            <td>
+                                                @if($brand->parent_id)
+                                                    {{ $brand->parent->name }}
+                                                @else
+                                                    --
+                                                @endif
+                                            </td>
                                             <td>{{ $brand->description }}</td>
                                             <td>
                                                 @if ($brand->logo)
@@ -48,7 +56,7 @@
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $brands->links() !!}
+                                {!! $brands->appends(\Request::except('page'))->render() !!}
                             </div>
                         </div>
                     </div>

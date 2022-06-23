@@ -20,9 +20,25 @@
                                 <div class="row">
                                     <x-form-input name="description" size="s">Descripción</x-form-input>
                                 </div>
+                                @admin
+                                    <div class="row">
+                                        <x-form-select name="parent_id" label="Marca padre" size="s" required="true">
+                                            @foreach($brands as $brand)
+                                                <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                            @endforeach
+                                        </x-form-select>
+                                    </div>
+                                @else
+                                    <input type="hidden" name="parent_id" value="{{ auth()->user()->brand->id }}" />
+                                @endadmin
                                 <div class="row">
                                     <x-form-file name="logo" size="s">Logo</x-form-file>
                                 </div>
+                                @super
+                                    <div class="row">
+                                        <x-form-switch name="is_primary" size="s">Primaria</x-form-switch>
+                                    </div>
+                                @endsuper
                                 <div class="row">
                                     <x-form-switch name="is_active" checked="true" size="s">Activo</x-form-switch>
                                 </div>

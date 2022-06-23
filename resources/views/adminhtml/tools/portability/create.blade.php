@@ -12,33 +12,63 @@
                 <div class="col-xl-12">
                     <div class="card user-list">
                         <div class="card-block pb-0">
-                            <x-form action="{{ route('portability.store') }}">
-                                <div class="row">
-                                    <x-form-input name="fullname" required="true" size="s">Nombre completo</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-input name="email" required="true" size="s">Correo electrónico</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-input name="nip" required="true" size="s">NIP</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-input name="msisdn" required="true" size="s">Número telefonico a portar</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-input name="msisdn_temp" required="true" size="s">Número telefonico temporal</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-input name="iccid" required="true" size="s">ICCID</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <button class="btn  btn-primary" type="submit">Guardar</button>
-                                        <a class="btn btn-light" href="{{ route('portability.index') }}">Cancelar</a>
+                            @seller
+                                <x-form action="{{ route('portability.store') }}">
+                                    <div class="row">
+                                        <x-form-input name="fullname" required="true" size="s">Nombre completo</x-form-input>
                                     </div>
-                                </div>
+                                    <div class="row">
+                                        <x-form-input name="email" required="true" size="s">Correo electrónico</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="nip" required="true" size="s">NIP</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="msisdn" required="true" size="s">Número telefonico a portar</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="msisdn_temp" required="true" size="s">Número telefonico temporal</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="iccid" required="true" size="s">ICCID</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button class="btn  btn-primary" type="submit">Guardar</button>
+                                            <a class="btn btn-light" href="{{ route('portability.index') }}">Cancelar</a>
+                                        </div>
+                                    </div>
 
-                            </x-form>
+                                </x-form>
+                            @else
+                                <x-form action="{{ route('portability.store') }}">
+                                    <div class="row">
+                                        <x-form-input name="fullname" size="s">Nombre completo</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="email" size="s">Correo electrónico</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="nip" required="true" size="s">NIP</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="msisdn" required="true" size="s">Número telefonico a portar</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="msisdn_temp" size="s">Número telefonico temporal</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <x-form-input name="iccid" size="s">ICCID</x-form-input>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button class="btn  btn-primary" type="submit">Guardar</button>
+                                            <a class="btn btn-light" href="{{ route('portability.index') }}">Cancelar</a>
+                                        </div>
+                                    </div>
+
+                                </x-form>
+                            @endseller
                         </div>
                     </div>
                 </div>

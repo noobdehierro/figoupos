@@ -1,4 +1,7 @@
 <x-app-layout>
+    @if(!empty($infoMsg))
+        <x-flash type="warning" dismiss="yes">{{ $infoMsg }}</x-flash>
+    @endif
     <div class="card">
         <div class="card-header top-card">
             <h5>Contratación</h5>

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PortabilityRequest;
+use App\Models\Configuration;
 use App\Models\Portability;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PortabilityController extends Controller
 {
@@ -14,7 +17,10 @@ class PortabilityController extends Controller
      */
     public function index()
     {
-        $portabilities = Portability::paginate(25);
+        $portabilities = Portability::where(
+            'user_id',
+            auth()->user()->id
+        )->paginate(25);
 
         return view('adminhtml.tools.portability.index', [
             'portabilities' => $portabilities
@@ -40,16 +46,28 @@ class PortabilityController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'fullname' => 'required',
-            'email' => 'required|email',
+            'fullname' => 'nullable',
+            'email' => 'nullable|email',
             'nip' => 'required|numeric',
             'msisdn' => 'required',
-            'msisdn_temp' => 'required',
-            'iccid' => 'required'
+            'msisdn_temp' => 'nullable',
+            'iccid' => 'nullable',
+            'user_id' => 'nullable',
+            'brand_id' => 'nullable'
         ]);
 
         try {
-            Portability::create($attributes);
+            $attributes['fullname'] = $attributes['fullname'] ?? 'no asignado';
+            $attributes['email'] = $attributes['email'] ?? 'no asignado';
+            $attributes['msisdn_temp'] =
+                $attributes['msisdn_temp'] ?? 'no asignado';
+            $attributes['iccid'] = $attributes['iccid'] ?? 'no asignado';
+            $attributes['user_id'] = auth()->user()->id;
+            $attributes['brand_id'] = auth()->user()->primary_brand_id;
+
+            $portability = Portability::create($attributes);
+
+            self::portabilityNotification($portability);
 
             return redirect()
                 ->route('portability.index')
@@ -104,5 +122,33 @@ class PortabilityController extends Controller
     public function destroy(Portability $portability)
     {
         //
+    }
+
+    /**
+     * Notification for a new portability request
+     *
+     * @param Portability $portability
+     * @return void
+     */
+    private function portabilityNotification(Portability $portability)
+    {
+        if (
+            auth()
+                ->user()
+                ->can('limited')
+        ) {
+            Mail::to('portabilidad@saycocorporativo.com')
+                ->cc('ebermudez@saycocorporativo.com')
+                ->bcc('roberto.guzman@leancommerce.mx')
+                ->send(new PortabilityRequest($portability));
+        } else {
+            $configuration = Configuration::wherein('code', [
+                'notifications_email'
+            ])->get();
+
+            $to = $configuration[0]->value;
+
+            Mail::to($to)->send(new PortabilityRequest($portability));
+        }
     }
 }

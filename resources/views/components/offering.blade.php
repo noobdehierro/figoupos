@@ -7,8 +7,10 @@
 ])
 
 @php
+    $selectButton = true;
     if ($action_route === 'default') {
         $action_route = route('offerings.edit', $id);
+        $selectButton = false;
     }
 @endphp
 
@@ -26,8 +28,16 @@
                 {{ $description }}
             </div>
         </div>
-        <div class="card-footer">
-            <a href="{{ $action_route }}" data-id="{{ $qv_offering_id }}" class="btn shadow-1 btn-primary offering-select">{{ $action }}</a>
-        </div>
+        @if($selectButton)
+            <div class="card-footer">
+                <a href="{{ $action_route }}" data-id="{{ $qv_offering_id }}" class="btn shadow-1 btn-primary offering-select">{{ $action }}</a>
+            </div>
+        @else
+            @super
+            <div class="card-footer">
+                <a href="{{ $action_route }}" data-id="{{ $qv_offering_id }}" class="btn shadow-1 btn-primary offering-select">{{ $action }}</a>
+            </div>
+            @endsuper
+        @endif
     </div>
 </div>

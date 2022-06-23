@@ -94,6 +94,11 @@
                             <table class="table table-borderless">
                                 <tbody>
                                 <tr class="text-dark">
+                                    <td>MSISDN</td>
+                                    <td>:</td>
+                                    <td class="text-c-blue">{{ $order->msisdn }}</td>
+                                </tr>
+                                <tr class="text-dark">
                                     <td>IMEI</td>
                                     <td>:</td>
                                     <td>{{ $order->imei }}</td>
@@ -112,7 +117,8 @@
                                     <td>Canal</td>
                                     <td>:</td>
                                     <td>{{ $order->channel }}</td>
-                                </tr
+                                </tr>
+                                <tr><td colspan="3">&nbsp;</td> </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -121,13 +127,23 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-block">
-                            <h5 class="mt-1 mb-3">Producto</h5>
+                            <h5 class="mt-1 mb-3">Pago</h5>
                             <table class="table table-borderless">
                                 <tbody>
                                 <tr class="text-dark">
                                     <td>Método de pago</td>
                                     <td>:</td>
                                     <td class="text-c-blue">{{ $order->payment_method }}</td>
+                                </tr>
+                                <tr class="text-dark">
+                                    <td>Id de pago</td>
+                                    <td>:</td>
+                                    <td class="text-c-blue">{{ $order->payment_id }}</td>
+                                </tr>
+                                <tr class="text-dark">
+                                    <td>Referencia</td>
+                                    <td>:</td>
+                                    <td class="text-c-blue">{{ $order->reference_id }}</td>
                                 </tr>
                                 <tr class="text-dark">
                                     <td>ID</td>
@@ -140,9 +156,9 @@
                                     <td>{{ $order->created_at }}</td>
                                 </tr>
                                 <tr class="text-dark">
-                                    <td>Total</td>
+                                    <td><span class="f-w-700">Total</span></td>
                                     <td>:</td>
-                                    <td>{{ $order->total }}</td>
+                                    <td><span class="f-w-700">${{ $order->total }} MXN</span> </td>
                                 </tr>
                                 </tbody>
                             </table>

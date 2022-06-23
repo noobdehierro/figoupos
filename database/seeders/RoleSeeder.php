@@ -33,6 +33,9 @@ class RoleSeeder extends Seeder
             ],
             [
                 'name' => 'Seller'
+            ],
+            [
+                'name' => 'Limited'
             ]
         ];
 

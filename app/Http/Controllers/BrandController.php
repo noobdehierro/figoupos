@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
@@ -14,7 +16,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::paginate(10);
+        $brands = Brand::getBrandsByUserBrand();
 
         return view('adminhtml.brands.index', ['brands' => $brands]);
     }
@@ -26,7 +28,9 @@ class BrandController extends Controller
      */
     public function create()
     {
-        return view('adminhtml.brands.create');
+        $currentUser = auth()->user();
+        $brands = Brand::getBrandsByUserBrand(false);
+        return view('adminhtml.brands.create', ['brands' => $brands]);
     }
 
     /**
@@ -39,18 +43,20 @@ class BrandController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'parent_id' => 'required',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         try {
             $brand = new Brand();
             $brand->name = $request->name;
+            $brand->parent_id = $request->parent_id;
             $brand->description = $request->description;
             if ($request->logo) {
                 $path = $request->file('logo')->store('brands');
                 $brand->logo = $path;
             }
-
+            $brand->is_primary = $request->is_primary == 'on';
             $brand->is_active = $request->is_active == 'on';
             $brand->save();
         } catch (\Exception $exception) {
@@ -81,7 +87,15 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        return view('adminhtml.brands.edit', ['brand' => $brand]);
+        self::checkPermissions($brand);
+
+        $currentUser = auth()->user();
+        $parents = Brand::getBrandsByUserBrand(false);
+
+        return view('adminhtml.brands.edit', [
+            'brand' => $brand,
+            'parents' => $parents
+        ]);
     }
 
     /**
@@ -100,12 +114,13 @@ class BrandController extends Controller
 
         try {
             $brand->name = $request->name;
+            $brand->parent_id = $request->parent_id ?: $brand->parent_id;
             $brand->description = $request->description;
             if ($request->logo) {
                 $path = $request->file('logo')->store('brands');
                 $brand->logo = $path;
             }
-
+            $brand->is_primary = $request->is_primary == 'on';
             $brand->is_active = $request->is_active == 'on';
             $brand->save();
         } catch (\Exception $exception) {
@@ -130,5 +145,19 @@ class BrandController extends Controller
         return redirect()
             ->route('brands.index')
             ->with('success', 'El recuso se elimino con exito.');
+    }
+
+    private function checkPermissions($brand)
+    {
+        $current = auth()->user();
+
+        if (
+            $brand->id != $current->brand_id &&
+            $brand->parent_id != $current->brand_id
+        ) {
+            abort(403);
+        }
+
+        return Response::allow();
     }
 }
