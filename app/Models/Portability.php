@@ -22,7 +22,9 @@ class Portability extends Model
         'nip',
         'msisdn',
         'msisdn_temp',
-        'iccid'
+        'iccid',
+        'user_id',
+        'brand_id'
     ];
 
     public $sortable = [

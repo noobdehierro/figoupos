@@ -27,7 +27,7 @@ class PurchaseController extends Controller
         $account = auth()->user()->account;
 
         if ($account) {
-            $offerings = Offering::all();
+            $offerings = Offering::getOfferingsByUserBrand(false);
 
             try {
                 $order = Order::where([

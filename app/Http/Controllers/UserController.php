@@ -216,11 +216,13 @@ class UserController extends Controller
     {
         $current = auth()->user();
 
-        if (
-            $user->brand_id != $current->brand_id &&
-            $current->brand_id != $user->brand->parent_id
-        ) {
-            abort(403);
+        if (!$current->can('super')) {
+            if (
+                $user->brand_id != $current->brand_id &&
+                $current->brand_id != $user->brand->parent_id
+            ) {
+                abort(403);
+            }
         }
 
         return Response::allow();

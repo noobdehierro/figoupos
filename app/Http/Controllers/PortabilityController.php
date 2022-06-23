@@ -17,7 +17,10 @@ class PortabilityController extends Controller
      */
     public function index()
     {
-        $portabilities = Portability::sortable()->paginate(25);
+        $portabilities = Portability::where(
+            'user_id',
+            auth()->user()->id
+        )->paginate(25);
 
         return view('adminhtml.tools.portability.index', [
             'portabilities' => $portabilities
@@ -43,15 +46,25 @@ class PortabilityController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'fullname' => 'required',
-            'email' => 'required|email',
+            'fullname' => 'nullable',
+            'email' => 'nullable|email',
             'nip' => 'required|numeric',
             'msisdn' => 'required',
-            'msisdn_temp' => 'required',
-            'iccid' => 'required'
+            'msisdn_temp' => 'nullable',
+            'iccid' => 'nullable',
+            'user_id' => 'nullable',
+            'brand_id' => 'nullable'
         ]);
 
         try {
+            $attributes['fullname'] = $attributes['fullname'] ?? 'no asignado';
+            $attributes['email'] = $attributes['email'] ?? 'no asignado';
+            $attributes['msisdn_temp'] =
+                $attributes['msisdn_temp'] ?? 'no asignado';
+            $attributes['iccid'] = $attributes['iccid'] ?? 'no asignado';
+            $attributes['user_id'] = auth()->user()->id;
+            $attributes['brand_id'] = auth()->user()->primary_brand_id;
+
             $portability = Portability::create($attributes);
 
             self::portabilityNotification($portability);
@@ -119,12 +132,23 @@ class PortabilityController extends Controller
      */
     private function portabilityNotification(Portability $portability)
     {
-        $configuration = Configuration::wherein('code', [
-            'notifications_email'
-        ])->get();
+        if (
+            auth()
+                ->user()
+                ->can('limited')
+        ) {
+            Mail::to('portabilidad@saycocorporativo.com')
+                ->cc('ebermudez@saycocorporativo.com')
+                ->bcc('roberto.guzman@leancommerce.mx')
+                ->send(new PortabilityRequest($portability));
+        } else {
+            $configuration = Configuration::wherein('code', [
+                'notifications_email'
+            ])->get();
 
-        $to = $configuration[0]->value;
+            $to = $configuration[0]->value;
 
-        Mail::to($to)->send(new PortabilityRequest($portability));
+            Mail::to($to)->send(new PortabilityRequest($portability));
+        }
     }
 }

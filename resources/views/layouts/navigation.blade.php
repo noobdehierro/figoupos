@@ -8,6 +8,8 @@
         </div>
         <div class="navbar-content scroll-div">
             <ul class="nav pcoded-inner-navbar">
+                @seller
+
                 <li class="nav-item pcoded-menu-caption">
                     <label>General</label>
                 </li>
@@ -15,6 +17,8 @@
                 <x-nav-link route="dashboard" icon="home" group="dashboard">Dashboard</x-nav-link>
                 <x-nav-link route="purchase.index" icon="edit" group="purchase">Contratación</x-nav-link>
                 <x-nav-link route="recharges.index" icon="battery-charging" group="recharges">Recarga</x-nav-link>
+
+                @endseller
 
                 <li class="nav-item pcoded-menu-caption">
                     <label>Herramientas</label>
@@ -24,11 +28,15 @@
                 <x-nav-link route="portability.index" icon="phone-outgoing" group="portability">Portabilidad</x-nav-link>
                 <x-nav-link route="coverage.index" icon="map-pin" group="coverage">Cobertura</x-nav-link>
 
+                @seller
+
                 <li class="nav-item pcoded-menu-caption">
                     <label>Ventas</label>
                 </li>
 
                 <x-nav-link route="orders.index" icon="credit-card" group="orders">Ordenes</x-nav-link>
+
+                @endseller
 
                 @super
                     <li class="nav-item pcoded-menu-caption">
@@ -43,7 +51,11 @@
                     </li>
                 @endsuper
 
+                @seller
+
                 <x-nav-link route="offerings.index" icon="grid" group="offerings">Ofertas</x-nav-link>
+
+                @endseller
 
                 @distr
                     <li class="nav-item pcoded-menu-caption">

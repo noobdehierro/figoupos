@@ -34,22 +34,14 @@ class Offering extends Model
                 $offerings = Offering::all();
             }
         } else {
-            $brand_id = $user->brand_id;
-            $parent_id = $user->brand->parent_id;
-
-            $brand = Brand::select('id')
-                ->where('id', $parent_id)
-                ->where('is_primary', 1)
-                ->whereNotNull('parent_id')
-                ->orWhere('id', $brand_id)
-                ->where('is_primary', 1);
+            $brand_id = $user->primary_brand_id;
 
             if ($is_paginate) {
-                $offerings = Offering::whereIn('brand_id', $brand)->paginate(
+                $offerings = Offering::where('brand_id', $brand_id)->paginate(
                     10
                 );
             } else {
-                $offerings = Offering::whereIn('brand_id', $brand)->get();
+                $offerings = Offering::where('brand_id', $brand_id)->get();
             }
         }
 
