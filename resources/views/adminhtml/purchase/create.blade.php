@@ -1,4 +1,7 @@
 <x-app-layout>
+    @push('meta')
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+    @endpush
     <div class="card">
         <div class="card-header top-card">
             <h5>Registro de información</h5>
@@ -117,14 +120,17 @@
                                                     var postcode = $('#postcode').val();
 
                                                     $.ajax({
-                                                        url: 'https://api.copomex.com/query/info_cp/' + postcode +
-                                                            '?token=5b2e78a0-7c7a-4343-a684-64913f730fce',
-                                                        type: 'GET',
-                                                        dataType: 'json',
+                                                        url: '{{ route('copomex.create') }}',
+                                                        type: 'POST',
+                                                        data: {
+                                                            postcode: postcode
+                                                        },
+                                                        headers: {
+                                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                        },
                                                         success: function(data) {
                                                             $('#suburb').children().remove();
                                                             $.each(data, function(key, value) {
-
                                                                 $('#suburb').append(
                                                                     '<option value="' + value.response
                                                                     .asentamiento +
@@ -134,6 +140,7 @@
                                                             });
                                                             $('#city').val(data[0].response.municipio);
                                                             $('#region').val(data[0].response.estado);
+                                                            // console.log(data);
                                                         },
                                                         error: function(data) {
                                                             alert('codigo postal no encontrado');

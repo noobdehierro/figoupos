@@ -38,7 +38,7 @@
 
                 @endseller
 
-                @super
+                @admin
                     <li class="nav-item pcoded-menu-caption">
                         <label>Reportes</label>
                     </li>
@@ -49,7 +49,7 @@
                     <li class="nav-item pcoded-menu-caption">
                         <label>Catálogo</label>
                     </li>
-                @endsuper
+                @endadmin
 
                 @seller
 

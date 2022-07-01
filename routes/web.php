@@ -18,7 +18,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\CopomexController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\MailerController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RechargeController;
 use App\Http\Controllers\SalesController;
@@ -181,6 +183,13 @@ Route::middleware('auth')->group(function () {
         'checkjquery'
     ])->name('compatibility.checkjquery');
 
+    /** Copomex */
+
+    Route::POST('copomex/postcode', [
+        CopomexController::class,
+        'create'
+    ])->name('copomex.create');
+
     /**  sales  / ventas   */
 
     Route::get('/sales', [
@@ -215,6 +224,8 @@ Route::middleware('auth')->group(function () {
         VendorController::class,
         'export'
     ])->name('vendors.export');
+
+
 });
 
 /** Auth Routes */

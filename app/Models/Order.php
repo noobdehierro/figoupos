@@ -113,6 +113,12 @@ class Order extends Model
     public function scopeFilterOrders($query, array $filters)
     {
 
+        $brand = auth()->user()->brand_id;
+
+        $query->when($brand, function ($query) use ($brand) {
+            $query->where('brand_id', $brand);
+        });
+
         $query->when($filters['initDate'] ?? false, function ($query) use ($filters) {
             $query->when($filters['endDate'] ?? false, function ($query) use ($filters) {
                 $query->whereBetween('created_at', [
@@ -139,6 +145,12 @@ class Order extends Model
 
     public function scopeFilterVendors($query, array $filters)
     {
+
+        $brand = auth()->user()->brand_id;
+
+        $query->when($brand, function ($query) use ($brand) {
+            $query->where('brand_id', $brand);
+        });
 
         $query->when($filters['initDate'] ?? false, function ($query) use ($filters) {
             $query->when($filters['endDate'] ?? false, function ($query) use ($filters) {
