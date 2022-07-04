@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="card">
         <div class="card-header top-card">
-            <h5>Nueva cuenta</h5>
+            <h5>Corte de caja</h5>
         </div>
     </div>
 
@@ -14,34 +14,15 @@
                     <div class="card user-list">
                         <div class="card-block pb-0">
                             <x-form action="{{ route('accounts.store') }}" enctype="multipart/form-data">
-                                @admin
                                     <div class="row">
-                                        <x-form-select name="user_id" label="Usuario" size="s" required="true">
+                                        <x-form-select name="account_id" label="Usuario" size="s" required="true">
                                             @foreach($users as $user)
                                                 <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                             @endforeach
                                         </x-form-select>
                                     </div>
-                                @endadmin
-                                @super
                                 <div class="row">
-                                    <x-form-select name="brand_id" label="Marca" size="s" required="true">
-                                        @foreach($brands as $brand)
-                                            <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
-                                        @endforeach
-                                    </x-form-select>
-                                </div>
-                                @else
-                                    <input type="hidden" name="brand_id" value="{{ auth()->user()->primary_brand_id }}" />
-                                @endsuper
-                                <div class="row">
-                                    <x-form-input name="name" size="s">Nombre</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-input name="amount" size="s" readonly="true" value="0" group="$">Saldo disponible</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-switch name="is_active" checked="true" size="s">Activo</x-form-switch>
+                                    <x-form-input name="amount" size="s">Monto</x-form-input>
                                 </div>
                                 <div class="row">
                                     <button class="btn  btn-primary" type="submit">Guardar</button>

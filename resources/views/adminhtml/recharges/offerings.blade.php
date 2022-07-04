@@ -12,7 +12,7 @@
                 <div class="row">
                     @if(isset($offerings) && count($offerings) > 0)
                         @foreach($offerings as $offering)
-                            <x-offering id="{{ $offering->id }}" brand="{{ $offering->brand->name }}" action="Seleccionar">
+                            <x-offering id="{{ $offering->id }}" brand="" action="Seleccionar">
                                 <x-slot name="name">{{ $offering->name }}</x-slot>
                                 <x-slot name="price">{{ $offering->price }}</x-slot>
                                 <x-slot name="description">

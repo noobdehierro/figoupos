@@ -2,9 +2,6 @@
     <div class="card">
         <div class="card-header top-card">
             <h5>Cuentas</h5>
-            <a id="add" href="{{ route('accounts.create') }}" title="Add New" type="button" class="btn btn-primary top-card-link" data-ui-id="add-button">
-                <span>Añadir nueva</span>
-            </a>
         </div>
     </div>
 
@@ -19,13 +16,13 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>@sortablelink('id','#')</th>
-                                            <th>@sortablelink('user.name','usuario')</th>
-                                            <th>@sortablelink('name','Nombre de la cuenta')</th>
-                                            <th>@sortablelink('amount','Saldo disponible')</th>
-                                            <th>@sortablelink('is_active','activo')</th>
+                                            <th>#</th>
+                                            <th>Usuario</th>
+                                            <th>Nombre de la cuenta</th>
+                                            <th>Saldo disponible</th>
+                                            <th>Activo</th>
                                             <th>Acción</th>
-                                        </tr>
+                                      </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($accounts as $account)
@@ -36,15 +33,16 @@
                                             <td>${{ $account->amount }}</td>
                                             <td>{{ $account->is_active ? 'Si' : 'No' }}</td>
                                             <td>
-                                                <a href="{{ route('accounts.edit', $account->id) }}" class="btn btn-primary btn-sm">Ver/Editar</a>
+                                                <a href="{{ route('accounts.show', $account->id) }}" class="btn btn-primary btn-sm">Ver movimientos</a>
                                             </td>
+
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
                             </div>
                             <div class="d-flex justify-content-center">
-                                {!! $accounts->appends(\Request::except('page'))->render() !!}
+                                {!! $accounts->links() !!}
                             </div>
                         </div>
                     </div>
