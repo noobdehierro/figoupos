@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\User;
-use App\Models\Movements;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -49,37 +47,34 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'account_id' => ['required', Rule::exists('accounts', 'id')],
-            'amount' => 'required'
+        $attributes = $request->validate([
+            'user_id' => ['required', Rule::exists('users', 'id')],
+            'brand_id' => ['required', Rule::exists('brands', 'id')],
+            'name' => 'nullable',
+            'amount' => 'nullable'
         ]);
-        $date = date('Y-m-d H:i:s');
-        $account_id = $request->user_id;
-        DB::table('movements')->insert([
-            'account_id' => $request->account_id,
-            'amount' => $request->amount,
-            'description' => 'Corte de caja',
-            'operation' => 'Abono',
-            'created_at' => $date,
-            'updated_at' => $date
-        ]);
+
+        try {
+            $attributes['is_active'] = $request->is_active == 'on';
+            Account::create($attributes);
+        } catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
         return redirect()
             ->route('accounts.index')
-            ->with('success', 'Ha guardado los cambios.');
+            ->with('success', 'Se creo la cuenta correctamente.');
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Account  $account
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show(Account $account)
     {
-        $movements = DB::table('movements')
-            ->where('account_id', '=', $account->id)
-            ->get();
-        return view('adminhtml.accounts.show', ['movements' => $movements]);
+        return view('adminhtml.accounts.show', ['account' => $account]);
     }
 
     /**
@@ -90,6 +85,7 @@ class AccountController extends Controller
      */
     public function edit(Account $account)
     {
+        //
     }
 
     /**
@@ -112,6 +108,7 @@ class AccountController extends Controller
      */
     public function destroy(Account $account)
     {
+        //
     }
 
     private function checkPermissions()
