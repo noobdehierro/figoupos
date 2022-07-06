@@ -17,6 +17,7 @@ use App\Http\Controllers\OfferingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CashClosingsController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CopomexController;
 use App\Http\Controllers\MailController;
@@ -155,6 +156,7 @@ Route::middleware('auth')->group(function () {
         'brands' => BrandController::class,
         'tools/portability' => PortabilityController::class,
         'mails' => MailController::class,
+        'cashClosings' => CashClosingsController::class,
 
     ]);
 

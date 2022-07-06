@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header top-card">
             <h5>Edición de marca</h5>
-            <x-form action="{{ route('brands.destroy',$brand->id) }}" method="DELETE" class="top-card-link">
+            <x-form action="{{ route('accounts.destroy',$account->id) }}" method="DELETE" class="top-card-link">
                 <x-confirm id="brand-alert" action="Eliminar">¿Esta seguro de borrar esta marca?</x-confirm>
             </x-form>
         </div>
@@ -16,43 +16,48 @@
                 <div class="col-xl-12">
                     <div class="card user-list">
                         <div class="card-block pb-0">
-                            <x-form action="{{ route('brands.update', $brand->id) }}" method="PUT" enctype="multipart/form-data">
-                                <div class="row">
-                                    <x-form-input name="name" value="{{ $brand->name }}" required="true" size="s">Nombre</x-form-input>
-                                </div>
-                                <div class="row">
-                                    <x-form-input name="description" value="{{ $brand->description }}" size="s">Descripción</x-form-input>
-                                </div>
+                            <x-form action="{{ route('accounts.update', $account->id) }}" method="PUT">
                                 @admin
                                     <div class="row">
-                                        <x-form-select name="parent_id" label="Marca padre" size="s" required="true">
-                                            @foreach($parents as $parent)
-                                                <option value="{{ $parent->id }}" {{ (old('brand_id', $brand->parent_id)) == $parent->id ? 'selected' : '' }}>{{ $parent->name }}</option>
+                                        <x-form-select name="user_id" label="Usuario" size="s" required="true">
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}"
+                                                    {{ old('user_id', $account->user_id) == $user->id ? 'selected' : '' }}>
+                                                    {{ $user->name }}
+                                                </option>
                                             @endforeach
                                         </x-form-select>
                                     </div>
                                 @endadmin
-                                <div class="row">
-                                    <x-form-file name="logo" size="s">Logo</x-form-file>
-                                </div>
-                                @if ($brand->logo)
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <img src="{{ Storage::url($brand->logo) }}" class="brand-logo" />
-                                        </div>
-                                    </div>
-                                @endif
                                 @super
                                     <div class="row">
-                                        <x-form-switch name="is_primary" checked="{{ $brand->is_primary }}" size="s">Primaria</x-form-switch>
+                                        <x-form-select name="brand_id" label="Marca" size="s" required="true">
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}"
+                                                    {{ old('brand_id', $account->brand_id) == $brand->id ? 'selected' : '' }}>
+                                                    {{ $brand->name }}
+                                                </option>
+                                            @endforeach
+                                        </x-form-select>
                                     </div>
+                                @else
+                                    <input type="hidden" name="brand_id"
+                                        value="{{ auth()->user()->primary_brand_id }}" />
                                 @endsuper
                                 <div class="row">
-                                    <x-form-switch name="is_active" checked="{{ $brand->is_active }}" size="s">Activo</x-form-switch>
+                                    <x-form-input name="name" size="s" required="true" :value="old('name', $account->name)">
+                                        Nombre</x-form-input>
+                                </div>
+                                <div class="row">
+                                    <x-form-input name="amount" size="s" readonly="true" value="0"
+                                        group="$">Saldo disponible</x-form-input>
+                                </div>
+                                <div class="row">
+                                    <x-form-switch name="is_active" checked="{{ $account->is_active }}" size="s">Activo</x-form-switch>
                                 </div>
                                 <div class="row">
                                     <button class="btn  btn-primary" type="submit">Guardar</button>
-                                    <a class="btn btn-light" href="{{ route('brands.index') }}">Cancelar</a>
+                                    <a class="btn btn-light" href="{{ route('accounts.index') }}">Cancelar</a>
                                 </div>
                             </x-form>
                         </div>
