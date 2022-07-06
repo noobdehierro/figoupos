@@ -41,6 +41,13 @@ class ConfigurationSeeder extends Seeder
                 'is_protected' => true
             ],
             [
+                'label'=>'Copomex Endpoint',
+                'code'=>'copomex_endpoint',
+                'value'=>'https://api.copomex.com/query/info_cp/',
+                'group'=>'General',
+                'is_protected'=>true
+            ],
+            [
                 'label' => 'Altan Auth Endpoint',
                 'code' => 'altan_auth_endpoint',
                 'value' =>
