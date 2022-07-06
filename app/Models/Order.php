@@ -149,7 +149,7 @@ class Order extends Model
         $brand = auth()->user()->brand_id;
 
         $query->when($brand, function ($query) use ($brand) {
-            $query->where('brand_id', $brand);
+            $query->where('orders.brand_id', $brand);
         });
 
         $query->when($filters['initDate'] ?? false, function ($query) use ($filters) {
