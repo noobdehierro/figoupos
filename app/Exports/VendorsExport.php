@@ -31,18 +31,6 @@ class VendorsExport implements FromQuery, ShouldAutoSize, WithHeadings
     public function query()
     {
 
-        // $orders = Order::latest()->select(
-        //     'user_id',
-        //     'user_name',
-        //     'brand_name',
-        //     Order::raw('sum(case when user_id in (select user_id from igoupos.orders) then 1 else 0 end ) as No_ventas'),
-        //     Order::raw("sum(case when sales_type = 'Recarga' and user_id in (select user_id from igoupos.orders) then 1 else 0 end ) as No_recargas"),
-        //     Order::raw("sum(case when sales_type = 'Contratación' and user_id in (select user_id from igoupos.orders) then 1 else 0 end ) as No_contrataciones")
-        //     ,'created_at'
-
-        //     )
-        //     ->groupBy('user_id', 'user_name', 'brand_name', 'created_at')
-        //     ->FilterVendors(request(['initDate', 'endDate', 'payment_method', 'sales_type', 'user_name'])) ;
 
         $orders = Order::select(
             'orders.user_id',
