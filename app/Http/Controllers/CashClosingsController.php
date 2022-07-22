@@ -18,7 +18,7 @@ class CashClosingsController extends Controller
      */
     public function index()
     {
-        $accounts = Account::getAccountsByUserBrand();
+        $accounts = Account::getAccountsByUserBrand()->where('amount', '>', 0);
 
         return view('adminhtml.cashclosings.index', ['accounts' => $accounts]);
     }
@@ -70,7 +70,9 @@ class CashClosingsController extends Controller
      */
     public function edit($id)
     {
-        return view('adminhtml.cashclosings.edit', ['id' => $id]);
+
+
+        return view('adminhtml.cashclosings.edit', ['id' => $id, 'amount' => Account::find($id)->amount]);
     }
 
     /**
@@ -87,6 +89,10 @@ class CashClosingsController extends Controller
         ]);
 
         $account = Account::find($id);
+
+        if ($request->amount > $account->amount) {
+            return redirect()->back()->with('error', 'El monto a abonar no puede ser mayor al saldo actual');
+        }
 
         try {
             $currentUserAmount = (float) $account->amount;
