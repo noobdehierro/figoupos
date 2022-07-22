@@ -156,7 +156,7 @@ Route::middleware('auth')->group(function () {
         'brands' => BrandController::class,
         'tools/portability' => PortabilityController::class,
         'mails' => MailController::class,
-        'cashClosings' => CashClosingsController::class,
+        'cash-closings' => CashClosingsController::class,
 
     ]);
 

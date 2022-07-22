@@ -11,7 +11,7 @@
                 <div class="col-xl-12">
                     <div class="card user-list">
                         <div class="card-block pb-0">
-                            <x-form action="{{ route('cashClosings.update',$id) }}" method="PUT">
+                            <x-form action="{{ route('cash-closings.update',$id) }}" method="PUT">
                                 <div class="row">
                                     <x-form-input name="amount" required="true" size="s" type="number">Monto a abonar</x-form-input><br/>
                                 </div>

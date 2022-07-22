@@ -36,7 +36,7 @@
                                             <td>${{ $account->amount }}</td>
                                             <td>{{ $account->is_active ? 'Si' : 'No' }}</td>
                                             <td>
-                                                <a href="{{ route('accounts.edit', $account->id) }}" class="btn btn-primary btn-sm">Ver/Editar</a>
+                                                <a href="{{ route('accounts.edit', $account->id) }}" class="btn btn-primary btn-sm">movimientos/Editar</a>
                                             </td>
                                         </tr>
                                     @endforeach

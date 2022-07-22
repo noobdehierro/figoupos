@@ -110,7 +110,7 @@ class CashClosingsController extends Controller
         }
 
         return redirect()
-            ->route('cashClosings.index', ['id' => $id])
+            ->route('accounts.edit', $id)
             ->with('success', 'Cierre de caja realizado correctamente');
     }
 
