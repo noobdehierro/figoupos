@@ -67,7 +67,7 @@
                         <x-nav-link route="balances.index" icon="sliders" group="balances">Saldo</x-nav-link>
                         <x-nav-link route="accounts.index" icon="briefcase" group="accounts">Cuentas</x-nav-link>
                         <x-nav-link route="brands.index" icon="tag" group="brands">Marcas</x-nav-link>
-                        <x-nav-link route="cashClosings.index" icon="star-on" group="cashClosings">Corte de caja</x-nav-link>
+                        <x-nav-link route="cash-closings.index" icon="star-on" group="cash-closings">Corte de caja</x-nav-link>
                         <x-nav-link route="mails.index" icon="mail" group="mails">Correos</x-nav-link>
 
                     @endadmin

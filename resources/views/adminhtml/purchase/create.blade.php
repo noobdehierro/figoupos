@@ -129,18 +129,25 @@
                                                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                                         },
                                                         success: function(data) {
-                                                            $('#suburb').children().remove();
-                                                            $.each(data, function(key, value) {
-                                                                $('#suburb').append(
-                                                                    '<option value="' + value.response
-                                                                    .asentamiento +
-                                                                    '">' + value.response.asentamiento +
-                                                                    '</option>'
-                                                                );
-                                                            });
-                                                            $('#city').val(data[0].response.municipio);
-                                                            $('#region').val(data[0].response.estado);
-                                                            // console.log(data);
+                                                            if (data.error == true) {
+                                                                $('#postcode').val('');
+                                                                $('#city').val('');
+                                                                $('#region').val('');
+                                                                $('#suburb').children().remove();
+                                                                console.log('error');
+                                                            } else {
+                                                                $('#suburb').children().remove();
+                                                                $.each(data, function(key, value) {
+                                                                    $('#suburb').append(
+                                                                        '<option value="' + value.response
+                                                                        .asentamiento +
+                                                                        '">' + value.response.asentamiento +
+                                                                        '</option>'
+                                                                    );
+                                                                });
+                                                                $('#city').val(data[0].response.municipio);
+                                                                $('#region').val(data[0].response.estado);
+                                                            }
                                                         },
                                                         error: function(data) {
                                                             alert('codigo postal no encontrado');

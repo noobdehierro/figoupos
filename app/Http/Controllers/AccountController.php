@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Movement;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
@@ -89,7 +90,9 @@ class AccountController extends Controller
         return view('adminhtml.accounts.edit', [
             'account' => $account,
             'users' => Account::getUsersByBrand(),
-            'brands' => Account::getBrandsByUserBrand()
+            'brands' => Account::getBrandsByUserBrand(),
+            'movements' => Movement::where('account_id', $account->id)->sortable()->get()
+
         ]);
 
     }
