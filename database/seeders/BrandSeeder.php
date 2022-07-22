@@ -23,6 +23,7 @@ class BrandSeeder extends Seeder
                 'parent_id' => null,
                 'name' => 'Figou',
                 'description' => 'Marca principal de IGOU',
+                'logo' => 'LtU9KxxtmyTx9SF53rcljrEuhEZ5aqjzHeqg9McL.png',
                 'is_primary' => true,
                 'is_active' => true
             ],

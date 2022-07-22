@@ -16,11 +16,11 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Usuario</th>
-                                            <th>Nombre de la cuenta</th>
-                                            <th>Saldo disponible</th>
-                                            <th>Activo</th>
+                                            <th>@sortablelink('id','#')</th>
+                                            <th>@sortablelink('user.name','usuario')</th>
+                                            <th>@sortablelink('name','Nombre de la cuenta')</th>
+                                            <th>@sortablelink('amount','Saldo disponible')</th>
+                                            <th>@sortablelink('is_active','activo')</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
@@ -33,11 +33,11 @@
                                                 <td>${{ $account->amount }}</td>
                                                 <td>{{ $account->is_active ? 'Si' : 'No' }}</td>
                                                 <td>
-                                                    <a href={{ route('cashClosings.show', $account->id) }}
-                                                        class="btn btn-primary">Ver movimientos</a>
-                                                    </a>
+
+                                                    {!! $account->amount > 0 ? '<a href="' . route('cash-closings.edit', $account->id) . '" class="btn btn-primary">Cortar caja</a>' : '' !!}
 
                                                 </td>
+
 
                                             </tr>
                                         @endforeach

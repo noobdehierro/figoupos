@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Balance;
@@ -51,13 +52,14 @@ class CashClosingsController extends Controller
      */
     public function show($id)
     {
-
         $movements = Movement::where('account_id', $id)->get();
 
         $account = Account::find($id);
 
-
-        return view('adminhtml.cashclosings.show', ['movements' => $movements, 'account' => $account]);
+        return view('adminhtml.cashclosings.show', [
+            'movements' => $movements,
+            'account' => $account
+        ]);
     }
 
     /**
@@ -76,56 +78,39 @@ class CashClosingsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
-
         $request->validate([
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric'
         ]);
 
         $account = Account::find($id);
 
-
         try {
-            $lastBalance = Balance::latest()->first();
-            if ($lastBalance) {
-                $prevAmount = (float) $lastBalance->balance;
-            } else {
-                $prevAmount = 0;
-            }
-
-            $balance = new Balance();
-            $balance->brand_id = $account->brand_id;
-            $balance->amount = (float) $request->amount;
-            $balance->balance = $prevAmount + (float) $request->amount;
-            $balance->operation = 'Cierre de caja';
-            $balance->description = 'Cierre de caja';
-            $balance->user_id = $account->user_id;
-            $balance->user_name = $account->user->name;
-
             $currentUserAmount = (float) $account->amount;
             $newUserAmount = $currentUserAmount - (float) $request->amount;
             $account->amount = $newUserAmount;
 
             $movement = new Movement();
             $movement->account_id = $id;
-            $movement->amount = (float) $request->amount;
+            $movement->amount = (float) $request->amount * -1;
             $movement->description = 'Cierre de caja';
             $movement->operation = 'Cierre de caja';
 
-            $balance->save();
+            $user = User::find($account->user_id);
+            $user->sales_limit = $user->sales_limit + $request->amount;
+
             $movement->save();
             $account->update();
-
-
+            $user->update();
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
 
         return redirect()
-            ->route('cashClosings.index', ['id' => $id])
+            ->route('accounts.edit', $id)
             ->with('success', 'Cierre de caja realizado correctamente');
     }
 
