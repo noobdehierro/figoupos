@@ -1,7 +1,8 @@
 <x-app-layout>
     <div class="card">
         <div class="card-header top-card">
-            <h5>Corte de caja</h5>
+            <h5>Corte de caja</h5> <span class="font-weight-bold">saldo pendiente <span
+                    class="badge badge-primary">{{ $amount }}</span></span>
         </div>
     </div>
     <div class="main-body">
@@ -11,9 +12,10 @@
                 <div class="col-xl-12">
                     <div class="card user-list">
                         <div class="card-block pb-0">
-                            <x-form action="{{ route('cash-closings.update',$id) }}" method="PUT">
+                            <x-form action="{{ route('cash-closings.update', $id) }}" method="PUT">
                                 <div class="row">
-                                    <x-form-input name="amount" required="true" size="s" type="number">Monto a abonar</x-form-input><br/>
+                                    <x-form-input name="amount" required="true" size="s" type="number">Monto a
+                                        abonar</x-form-input><br />
                                 </div>
                                 <div class="row">
                                     <div class="col-12">

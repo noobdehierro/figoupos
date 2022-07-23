@@ -44,7 +44,7 @@
                                     <div class="row">
                                         <x-form-input name="name" size="s" required="true" :value="old('name', $account->name)">
                                             Nombre</x-form-input>
-                                        <x-form-input name="amount" size="s" readonly="true" value="0"
+                                        <x-form-input name="amount" size="s" readonly="true" :value="old('amount', $account->amount)"
                                             group="$">Saldo disponible</x-form-input>
                                     </div>
                                     <div class="row">
