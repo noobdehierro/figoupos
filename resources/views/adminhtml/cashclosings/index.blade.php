@@ -34,8 +34,8 @@
                                                 <td>{{ $account->is_active ? 'Si' : 'No' }}</td>
                                                 <td>
 
-                                                    {!! $account->amount > 0 ? '<a href="' . route('cash-closings.edit', $account->id) . '" class="btn btn-primary">Cortar caja</a>' : '' !!}
-
+                                                    <a href="{{ route('cash-closings.edit', $account->id) }}"
+                                                        class="btn btn-primary">Cortar caja</a>
                                                 </td>
 
 
