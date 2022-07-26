@@ -87,7 +87,13 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        self::checkPermissions($brand);
+        $res= self::checkPermissions($brand);
+
+        if (!$res->allowed()){
+
+            return back()->with('error', 'No tiene permisos para editar esta marca.');
+
+        }
 
         $currentUser = auth()->user();
         $parents = Brand::getBrandsByUserBrand(false);
@@ -155,7 +161,7 @@ class BrandController extends Controller
             $brand->id != $current->brand_id &&
             $brand->parent_id != $current->brand_id
         ) {
-            abort(403);
+            return Response::deny();
         }
 
         return Response::allow();
