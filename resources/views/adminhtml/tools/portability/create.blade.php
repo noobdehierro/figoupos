@@ -15,20 +15,21 @@
                             @seller
                                 <x-form action="{{ route('portability.store') }}">
                                     <div class="row">
-                                        <x-form-input name="fullname" required="true" size="s">Nombre completo</x-form-input>
+                                        <x-form-input name="fullname" required="true" size="s">Nombre completo
+                                        </x-form-input>
                                     </div>
                                     <div class="row">
-                                        <x-form-input name="email" required="true" size="s">Correo electrónico</x-form-input>
+                                        <x-form-input name="email" size="s">Correo electrónico
+                                        </x-form-input>
                                     </div>
                                     <div class="row">
                                         <x-form-input name="nip" required="true" size="s">NIP</x-form-input>
                                     </div>
                                     <div class="row">
-                                        <x-form-input name="msisdn" required="true" size="s">Número telefonico a portar</x-form-input>
+                                        <x-form-input name="msisdn" required="true" size="s">Número telefonico a
+                                            portar</x-form-input>
                                     </div>
-                                    <div class="row">
-                                        <x-form-input name="msisdn_temp" required="true" size="s">Número telefonico temporal</x-form-input>
-                                    </div>
+
                                     <div class="row">
                                         <x-form-input name="iccid" required="true" size="s">ICCID</x-form-input>
                                     </div>
@@ -52,10 +53,12 @@
                                         <x-form-input name="nip" required="true" size="s">NIP</x-form-input>
                                     </div>
                                     <div class="row">
-                                        <x-form-input name="msisdn" required="true" size="s">Número telefonico a portar</x-form-input>
+                                        <x-form-input name="msisdn" required="true" size="s">Número telefonico a
+                                            portar</x-form-input>
                                     </div>
                                     <div class="row">
-                                        <x-form-input name="msisdn_temp" size="s">Número telefonico temporal</x-form-input>
+                                        <x-form-input name="msisdn_temp" size="s">Número telefonico temporal
+                                        </x-form-input>
                                     </div>
                                     <div class="row">
                                         <x-form-input name="iccid" size="s">ICCID</x-form-input>

@@ -45,8 +45,8 @@
                                                 value="{{ auth()->user()->primary_brand_id }}"></x-form-input>
                                             <x-form-input name="brand_name" type="hidden"
                                                 value="{{ $offering->brand->name }}"></x-form-input>
-                                            <x-form-input name="total" type="hidden"
-                                                value="{{ $offering->price }}"></x-form-input>
+                                            <x-form-input name="total" type="hidden" value="{{ $offering->price }}">
+                                            </x-form-input>
                                             <x-form-input name="channel" type="hidden" value="POS"></x-form-input>
                                             <x-form-input name="name" required="true" size="m">Nombre
                                             </x-form-input>
@@ -100,8 +100,7 @@
                                                 <x-form-input name="nip" size="s">NIP</x-form-input>
                                                 <x-form-input name="msisdn" required="true" size="s">Número a
                                                     portar</x-form-input>
-                                                <x-form-input name="msisdn_temp" required="true" size="s">
-                                                    Número temporal</x-form-input>
+
                                             </div>
                                         </div>
                                         <script>

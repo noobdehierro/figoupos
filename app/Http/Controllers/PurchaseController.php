@@ -108,7 +108,7 @@ class PurchaseController extends Controller
                 'email' => 'nullable',
                 'nip' => 'required|numeric',
                 'msisdn' => 'required',
-                'msisdn_temp' => 'required',
+                'msisdn_temp' => 'nullable',
                 'iccid' => 'nullable'
             ]);
 
@@ -116,6 +116,7 @@ class PurchaseController extends Controller
                 $request->name . ' ' . $request->lastname;
             $portability_attributes['email'] = $request->email;
             $portability_attributes['iccid'] = $request->iccid;
+            $portability_attributes['msisdn_temp'] = $request->msisdn_temp ?? 'no asignado';
         }
 
         try {
@@ -271,7 +272,7 @@ class PurchaseController extends Controller
                 'between_streets' => $order->references,
                 'address' => [
                     'street1' =>
-                        $order->street .
+                    $order->street .
                         ' ' .
                         $order->outdor .
                         ' ' .
