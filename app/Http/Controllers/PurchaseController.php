@@ -108,7 +108,7 @@ class PurchaseController extends Controller
                 'email' => 'nullable',
                 'nip' => 'required|numeric',
                 'msisdn' => 'required',
-                'msisdn_temp' => 'required',
+                'msisdn_temp' => 'nullable',
                 'iccid' => 'nullable'
             ]);
 
@@ -116,6 +116,7 @@ class PurchaseController extends Controller
                 $request->name . ' ' . $request->lastname;
             $portability_attributes['email'] = $request->email;
             $portability_attributes['iccid'] = $request->iccid;
+            $portability_attributes['msisdn_temp'] = $request->msisdn_temp ?? 'no asignado';
         }
 
         try {
@@ -234,7 +235,7 @@ class PurchaseController extends Controller
             $newBalance->save();
             $movement->save();
             $user->account->update();
-
+            self::activate_webhook($order);
             self::purchaseNotification($order);
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
@@ -271,7 +272,7 @@ class PurchaseController extends Controller
                 'between_streets' => $order->references,
                 'address' => [
                     'street1' =>
-                        $order->street .
+                    $order->street .
                         ' ' .
                         $order->outdor .
                         ' ' .
@@ -480,5 +481,148 @@ class PurchaseController extends Controller
         }
 
         return $conekta_public_key;
+    }
+
+    public function activate_webhook(Order $order)
+    {
+
+        $configuration = Configuration::wherein('code', [
+            'is_sandbox',
+            'external_payment_and_onboarding_preprod_endpoint',
+            'external_payment_and_onboarding_prod_endpoint',
+            'external_payment_and_onboarding_Prod_key',
+            'external_payment_and_onboarding_preprod_key'
+
+        ])->get();
+
+        foreach ($configuration as $config) {
+            if ($config->code == 'is_sandbox') {
+                $is_sandbox = $config->value;
+            }
+            if ($config->code == 'external_payment_and_onboarding_preprod_endpoint') {
+                $external_payment_and_onboarding_preprod_endpoint = $config->value;
+            }
+            if ($config->code == 'external_payment_and_onboarding_prod_endpoint') {
+                $external_payment_and_onboarding_prod_endpoint = $config->value;
+            }
+            if ($config->code == 'external_payment_and_onboarding_Prod_key') {
+                $external_payment_and_onboarding_Prod_key = $config->value;
+            }
+            if ($config->code == 'external_payment_and_onboarding_preprod_key') {
+                $external_payment_and_onboarding_preprod_key = $config->value;
+            }
+        }
+
+        if ($is_sandbox === 'true') {
+            $endpoint = $external_payment_and_onboarding_preprod_endpoint;
+
+            $api_key = $external_payment_and_onboarding_preprod_key;
+        } else {
+            $api_key = $external_payment_and_onboarding_Prod_key;
+            $endpoint = $external_payment_and_onboarding_prod_endpoint;
+        }
+
+        // URL
+        // $apiURL = 'https://public-webhook-sayco-preprod.qvantel.systems/api/onboarding/customer';
+        $apiURL = $endpoint;
+
+
+        // POST Data
+        $postInput = [
+            "basket" => [
+                "salesPersonId" => $order->user_name,
+                "paymentMethod" => [
+                    "paymentMethodId" => "openpay",
+                    "paymentMethodType" => "openpay-external-payment",
+                    "params" => []
+                ],
+
+                //obligatorios
+                "basketItems" => [[
+                    "quantity" => 1,
+                    "characteristics" => [[
+                        "value" => "CH_ServiceActivationType",
+                        "key" => "Pre-registration"
+                    ]],
+                    "productId" => "PO_Qvantel_Prepaid_Awesome_5G",
+                    "CH_NumberResource" => $order->telephone,
+                    "CH_ICC" => $order->iccid,
+                    "useICC" => true
+                ]]
+            ],
+            "customer" => [
+                "individual" => [
+                    "nationality" => "MX",
+                    "gender" => "null",
+                    "familyName" => $order->lastname,
+                    "givenName" => $order->name,
+                ],
+                //opcional
+                "contactMedia" => [[
+                    "role" => "primary",
+                    "validFor" => [
+                        "startDatetime" => "2018-04-12T10:07:51.276Z",
+                        "endDatetime" => "2032-04-12T10:07:51.276Z"
+                    ],
+                    "medium" => [
+                        "telephoneNumber" => [
+                            "number" => "string",
+                            "numberType" => "fixed-line"
+                        ],
+                        "emailAddress" => [
+                            "email" => $order->email,
+                        ],
+                        "postalAddress" => [
+                            "city" => $order->city,
+                            "coAddress" => $order->references,
+                            "apartment" => $order->indoor,
+                            "country" => "MX",
+                            "building" => $order->outdoor,
+                            "postalCode" => $order->postcode,
+                            "street" => $order->street,
+                            "stateOrProvince" => $order->region,
+                            "county" => $order->suburb,
+                        ]
+                    ]
+                ]],
+                "identifications" => [[
+                    "expirationDate" => "2024-11-25",
+                    "identificationId" => "12345678901",
+                    "issuingAuthority" => [
+                        "city" => $order->city,
+                        "name" => $order->name,
+                        "country" => "MX",
+                        "county" => $order->suburb,
+                        "stateOrProvince" => $order->region,
+                    ],
+                    "issuingDate" => "2018-04-12T10:07:51.276Z",
+                    "identificationType" => "personal-identity-code",
+                    "validFor" => [
+                        "startDatetime" => "2018-04-12T10:07:51.276Z",
+                        "endDatetime" => "2032-04-12T10:07:51.276Z"
+                    ]
+                ]]
+            ]
+        ];
+
+
+        // Headers
+        $headers = [
+            'Content-Type' => 'application/json',
+            'x-channel' => 'dealers', //funciona tambien con mApp
+            // 'Authorization' => 'Basic YWRtaW46YWRtaW4=',
+            'Authorization' => $api_key,
+
+
+        ];
+
+        $response = Http::withHeaders($headers)->post($apiURL, $postInput);
+
+        $statusCode = $response->status();
+        $responseBody = json_decode($response->getBody(), true);
+
+        // echo $statusCode;  // status code
+
+        // dd($responseBody); // body response
     }
 }
