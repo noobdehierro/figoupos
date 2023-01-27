@@ -18,8 +18,8 @@ class CreateEventsTable extends Migration
             $table->string('operacion');
             $table->unsignedBigInteger('order_id');
             $table->string('client_name');
-            $table->text('access_token');
-            $table->string('endpoint');
+            $table->string('api_key');
+            $table->string('api_endpoint');
             $table->longText('request');
             $table->string('code');
             $table->longText('response');

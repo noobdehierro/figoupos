@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Events;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -48,7 +49,17 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return view('adminhtml.orders.show', ['order' => $order]);
+        $events = Events::where('id', $order->id);
+
+        // dd($events->first());
+
+        return view(
+            'adminhtml.orders.show',
+            [
+                'order' => $order,
+                'event' => $events->first()
+            ]
+        );
     }
 
     /**

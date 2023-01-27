@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ActivateSim;
 use App\Mail\OrderPurchase;
 use App\Mail\PortabilityRequest;
 use App\Models\Balance;
 use App\Models\Configuration;
+use App\Models\Events;
 use App\Models\Movement;
 use App\Models\Offering;
 use App\Models\Order;
@@ -341,6 +343,8 @@ class PurchaseController extends Controller
                     $user->update();
 
                     self::purchaseNotification($order);
+                    self::activate_webhook($order);
+
 
                     return redirect()
                         ->route('orders.index')
@@ -486,6 +490,9 @@ class PurchaseController extends Controller
     public function activate_webhook(Order $order)
     {
 
+
+
+
         $configuration = Configuration::wherein('code', [
             'qvantel_webhook_sim_endpoint',
             'qvantel_webhook_sim_api_key',
@@ -506,11 +513,9 @@ class PurchaseController extends Controller
         $api_key = $qvantel_webhook_sim_api_key;
 
 
-        // dd($endpoint, $api_key);
-
-        // URL
-        // $apiURL = 'https://public-webhook-sayco-preprod.qvantel.systems/api/onboarding/customer';
         $apiURL = $endpoint;
+
+
 
 
         // POST Data
@@ -592,8 +597,7 @@ class PurchaseController extends Controller
         // Headers
         $headers = [
             'Content-Type' => 'application/json',
-            'x-channel' => 'dealers', //funciona tambien con mApp
-            // 'Authorization' => 'Basic YWRtaW46YWRtaW4=',
+            'x-channel' => 'dealers',
             'Authorization' => $api_key,
 
 
@@ -604,8 +608,35 @@ class PurchaseController extends Controller
         $statusCode = $response->status();
         $responseBody = json_decode($response->getBody(), true);
 
-        echo $statusCode;  // status code
 
-        dd($responseBody); // body response
+        Events::create([
+            'operacion' => 'Activacion de SIM',
+            'order_id' => $order->id,
+            'client_name' => $order->name . ' ' . $order->lastname,
+            'api_key' => $api_key,
+            'api_endpoint' => $endpoint,
+            'request' => json_encode($postInput),
+            'code' => $statusCode,
+            'response' => json_encode($responseBody),
+        ]);
+
+
+        if ($responseBody['status'] == 'error') {
+            $configuration = Configuration::wherein('code', [
+                'notifications_email'
+            ])->get();
+
+            $to = $configuration[0]->value;
+
+            Mail::to($to)->send(new ActivateSim($order, $responseBody['status']));
+        } else {
+            $configuration = Configuration::wherein('code', [
+                'notifications_email'
+            ])->get();
+
+            $to = $configuration[0]->value;
+
+            Mail::to($to)->send(new ActivateSim($order, $responseBody['status']));
+        }
     }
 }

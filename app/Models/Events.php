@@ -11,9 +11,10 @@ class Events extends Model
 
     protected $fillable = [
         'operacion',
+        'order_id',
         'client_name',
-        'access_token',
-        'endpoint',
+        'api_key',
+        'api_endpoint',
         'request',
         'code',
         'response',
