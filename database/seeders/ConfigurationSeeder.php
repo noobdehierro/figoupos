@@ -41,17 +41,17 @@ class ConfigurationSeeder extends Seeder
                 'is_protected' => true
             ],
             [
-                'label'=>'Copomex Endpoint',
-                'code'=>'copomex_endpoint',
-                'value'=>'https://api.copomex.com/query/info_cp/',
-                'group'=>'General',
-                'is_protected'=>true
+                'label' => 'Copomex Endpoint',
+                'code' => 'copomex_endpoint',
+                'value' => 'https://api.copomex.com/query/info_cp/',
+                'group' => 'General',
+                'is_protected' => true
             ],
             [
                 'label' => 'Altan Auth Endpoint',
                 'code' => 'altan_auth_endpoint',
                 'value' =>
-                    'https://altanredes-prod.apigee.net/v1/oauth/accesstoken',
+                'https://altanredes-prod.apigee.net/v1/oauth/accesstoken',
                 'group' => 'Altan',
                 'is_protected' => true
             ],
@@ -59,7 +59,7 @@ class ConfigurationSeeder extends Seeder
                 'label' => 'Altan Token',
                 'code' => 'altan_token',
                 'value' =>
-                    'MkdhcmtpenN1Y1d5ajVmRk5aQUNyQWY0d1RuZnEwYWY6a2JDQUVRTW05N3VlR3diRQ',
+                'MkdhcmtpenN1Y1d5ajVmRk5aQUNyQWY0d1RuZnEwYWY6a2JDQUVRTW05N3VlR3diRQ',
                 'group' => 'Altan',
                 'is_protected' => true
             ],
@@ -67,7 +67,7 @@ class ConfigurationSeeder extends Seeder
                 'label' => 'Altan Device Info Endpoint',
                 'code' => 'altan_device_info_endpoint',
                 'value' =>
-                    'https://altanredes-prod.apigee.net/cm-360/v1/subscribers/getDeviceInformation',
+                'https://altanredes-prod.apigee.net/cm-360/v1/subscribers/getDeviceInformation',
                 'group' => 'Altan',
                 'is_protected' => true
             ],
@@ -82,7 +82,7 @@ class ConfigurationSeeder extends Seeder
                 'label' => 'Qvantel Offering Endpoint',
                 'code' => 'qvantel_offering_endpoint',
                 'value' =>
-                    'https://api-figou-prod.qvantel.solutions/uc/v1/offerings',
+                'https://api-figou-prod.qvantel.solutions/uc/v1/offerings',
                 'group' => 'Qvantel',
                 'is_protected' => true
             ],
@@ -90,7 +90,7 @@ class ConfigurationSeeder extends Seeder
                 'label' => 'Qvantel Offering Endpoint Sandbox',
                 'code' => 'qvantel_offering_endpoint_sandbox',
                 'value' =>
-                    'https://mapp-sayco-preprod.qvantel.systems/uc/v1/offerings',
+                'https://mapp-sayco-preprod.qvantel.systems/uc/v1/offerings',
                 'group' => 'Qvantel',
                 'is_protected' => true
             ],
@@ -98,7 +98,7 @@ class ConfigurationSeeder extends Seeder
                 'label' => 'Qvantel Baskets Endpoint',
                 'code' => 'qvantel_baskets_endpoint',
                 'value' =>
-                    'https://api-figou-prod.qvantel.solutions/uc/v0/v3/baskets/',
+                'https://api-figou-prod.qvantel.solutions/uc/v0/v3/baskets/',
                 'group' => 'Qvantel',
                 'is_protected' => true
             ],
@@ -106,35 +106,35 @@ class ConfigurationSeeder extends Seeder
                 'label' => 'Qvantel Baskets Endpoint Sandbox',
                 'code' => 'qvantel_baskets_endpoint_sandbox',
                 'value' =>
-                    'https://mapp-sayco-preprod.qvantel.systems/uc/v0/v3/baskets/',
+                'https://mapp-sayco-preprod.qvantel.systems/uc/v0/v3/baskets/',
                 'group' => 'Qvantel',
                 'is_protected' => true
             ],
             [
                 'label' => 'Conekta Public API Key',
                 'code' => 'conekta_public_api_key',
-                'value' => 'key_ZR2XVAqpQ94q6idcdCikjGw',
+                'value' => 'key_RyfzzgmQx4rM12VjYEmfwGw',
                 'group' => 'Payment',
                 'is_protected' => true
             ],
             [
                 'label' => 'Conekta Private API Key',
                 'code' => 'conekta_private_api_key',
-                'value' => 'key_yQjT6EzehaJ5kP97xsiTZg',
+                'value' => 'key_z2zJre7mpoyWT3DR8qwCfw',
                 'group' => 'Payment',
                 'is_protected' => true
             ],
             [
                 'label' => 'Conekta Public API Key Sandbox',
                 'code' => 'conekta_public_api_key_sandbox',
-                'value' => 'key_PxykS51XqUuC2AkyqkyHsKw',
+                'value' => 'key_F6vgsqYFZXnzxMUpXVCoWpw',
                 'group' => 'Payment',
                 'is_protected' => true
             ],
             [
                 'label' => 'Conekta Private API Key Sandbox',
                 'code' => 'conekta_private_api_key_sandbox',
-                'value' => 'key_Lt9L1PSxYzirGhryU6RHQA',
+                'value' => 'key_gEmx4y9RkpQmqADqqxy1zw',
                 'group' => 'Payment',
                 'is_protected' => true
             ],
@@ -179,7 +179,52 @@ class ConfigurationSeeder extends Seeder
                 'value' => 'pk_8dcd63b64cbe4f019bd8222263564431',
                 'group' => 'Payment',
                 'is_protected' => true
-            ]
+            ],
+            [
+                'label' => 'SAYCO - external payment and onboarding preprod Endpoint',
+                'code' => 'external_payment_and_onboarding_preprod_endpoint',
+                'value' =>
+                'https://public-webhook-sayco-preprod.qvantel.systems/api/onboarding/customer',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'SAYCO - external payment and onboarding Prod API Key',
+                'code' => 'external_payment_and_onboarding_Prod_key',
+                'value' => 'Basic YWRtaW46YWRtaW4=',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'SAYCO - external payment and onboarding prod Endpoint',
+                'code' => 'external_payment_and_onboarding_prod_endpoint',
+                'value' =>
+                'https://public-webhook-figou-prod.qvantel.solutions/api/onboarding/customer',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'SAYCO - external payment and onboarding preprod API Key',
+                'code' => 'external_payment_and_onboarding_preprod_key',
+                'value' => 'Basic YWRtaW46YWRtaW4=',
+                'group' => 'Payment',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Qvantel webhook SIM Endpoint',
+                'code' => 'qvantel_webhook_sim_endpoint',
+                'value' => 'https://public-webhook-figou-prod.qvantel.solutions/api/onboarding/customer',
+                'group' => 'Qvantel',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Qvantel webhook SIM API Key',
+                'code' => 'qvantel_webhook_sim_api_key',
+                'value' => 'Basic YWRtaW46YWRtaW4=',
+                'group' => 'Qvantel',
+                'is_protected' => true
+            ],
+
         ];
 
         foreach ($configurations as $configuration) {
