@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ActivateSim;
 use App\Mail\OrderPurchase;
 use App\Mail\PortabilityRequest;
 use App\Models\Balance;
 use App\Models\Configuration;
+use App\Models\Events;
 use App\Models\Movement;
 use App\Models\Offering;
 use App\Models\Order;
@@ -341,6 +343,8 @@ class PurchaseController extends Controller
                     $user->update();
 
                     self::purchaseNotification($order);
+                    self::activate_webhook($order);
+
 
                     return redirect()
                         ->route('orders.index')
@@ -486,45 +490,32 @@ class PurchaseController extends Controller
     public function activate_webhook(Order $order)
     {
 
-        $configuration = Configuration::wherein('code', [
-            'is_sandbox',
-            'external_payment_and_onboarding_preprod_endpoint',
-            'external_payment_and_onboarding_prod_endpoint',
-            'external_payment_and_onboarding_Prod_key',
-            'external_payment_and_onboarding_preprod_key'
 
+
+
+        $configuration = Configuration::wherein('code', [
+            'qvantel_webhook_sim_endpoint',
+            'qvantel_webhook_sim_api_key',
         ])->get();
 
         foreach ($configuration as $config) {
-            if ($config->code == 'is_sandbox') {
-                $is_sandbox = $config->value;
+
+            if ($config->code == 'qvantel_webhook_sim_endpoint') {
+                $qvantel_webhook_sim_endpoint = $config->value;
             }
-            if ($config->code == 'external_payment_and_onboarding_preprod_endpoint') {
-                $external_payment_and_onboarding_preprod_endpoint = $config->value;
-            }
-            if ($config->code == 'external_payment_and_onboarding_prod_endpoint') {
-                $external_payment_and_onboarding_prod_endpoint = $config->value;
-            }
-            if ($config->code == 'external_payment_and_onboarding_Prod_key') {
-                $external_payment_and_onboarding_Prod_key = $config->value;
-            }
-            if ($config->code == 'external_payment_and_onboarding_preprod_key') {
-                $external_payment_and_onboarding_preprod_key = $config->value;
+            if ($config->code == 'qvantel_webhook_sim_api_key') {
+                $qvantel_webhook_sim_api_key = $config->value;
             }
         }
 
-        if ($is_sandbox === 'true') {
-            $endpoint = $external_payment_and_onboarding_preprod_endpoint;
+        $endpoint = $qvantel_webhook_sim_endpoint;
 
-            $api_key = $external_payment_and_onboarding_preprod_key;
-        } else {
-            $api_key = $external_payment_and_onboarding_Prod_key;
-            $endpoint = $external_payment_and_onboarding_prod_endpoint;
-        }
+        $api_key = $qvantel_webhook_sim_api_key;
 
-        // URL
-        // $apiURL = 'https://public-webhook-sayco-preprod.qvantel.systems/api/onboarding/customer';
+
         $apiURL = $endpoint;
+
+
 
 
         // POST Data
@@ -536,15 +527,13 @@ class PurchaseController extends Controller
                     "paymentMethodType" => "openpay-external-payment",
                     "params" => []
                 ],
-
-                //obligatorios
                 "basketItems" => [[
                     "quantity" => 1,
                     "characteristics" => [[
-                        "value" => "CH_ServiceActivationType",
-                        "key" => "Pre-registration"
+                        "value" => "Activation",
+                        "key" => "CH_ServiceActivationType"
                     ]],
-                    "productId" => "PO_Qvantel_Prepaid_Awesome_5G",
+                    "productId" => $order->qv_offering_id ?? '',
                     "CH_NumberResource" => $order->telephone,
                     "CH_ICC" => $order->iccid,
                     "useICC" => true
@@ -553,11 +542,10 @@ class PurchaseController extends Controller
             "customer" => [
                 "individual" => [
                     "nationality" => "MX",
-                    "gender" => "null",
+                    "gender" => "male",
                     "familyName" => $order->lastname,
                     "givenName" => $order->name,
                 ],
-                //opcional
                 "contactMedia" => [[
                     "role" => "primary",
                     "validFor" => [
@@ -609,8 +597,7 @@ class PurchaseController extends Controller
         // Headers
         $headers = [
             'Content-Type' => 'application/json',
-            'x-channel' => 'dealers', //funciona tambien con mApp
-            // 'Authorization' => 'Basic YWRtaW46YWRtaW4=',
+            'x-channel' => 'dealers',
             'Authorization' => $api_key,
 
 
@@ -621,8 +608,35 @@ class PurchaseController extends Controller
         $statusCode = $response->status();
         $responseBody = json_decode($response->getBody(), true);
 
-        // echo $statusCode;  // status code
 
-        // dd($responseBody); // body response
+        Events::create([
+            'operacion' => 'Activacion de SIM',
+            'order_id' => $order->id,
+            'client_name' => $order->name . ' ' . $order->lastname,
+            'api_key' => $api_key,
+            'api_endpoint' => $endpoint,
+            'request' => json_encode($postInput),
+            'code' => $statusCode,
+            'response' => json_encode($responseBody),
+        ]);
+
+
+        if ($responseBody['status'] == 'error') {
+            $configuration = Configuration::wherein('code', [
+                'notifications_email'
+            ])->get();
+
+            $to = $configuration[0]->value;
+
+            Mail::to($to)->send(new ActivateSim($order, $responseBody['status']));
+        } else {
+            $configuration = Configuration::wherein('code', [
+                'notifications_email'
+            ])->get();
+
+            $to = $configuration[0]->value;
+
+            Mail::to($to)->send(new ActivateSim($order, $responseBody['status']));
+        }
     }
 }

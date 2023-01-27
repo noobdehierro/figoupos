@@ -210,6 +210,20 @@ class ConfigurationSeeder extends Seeder
                 'group' => 'Payment',
                 'is_protected' => true
             ],
+            [
+                'label' => 'Qvantel webhook SIM Endpoint',
+                'code' => 'qvantel_webhook_sim_endpoint',
+                'value' => 'https://public-webhook-figou-prod.qvantel.solutions/api/onboarding/customer',
+                'group' => 'Qvantel',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Qvantel webhook SIM API Key',
+                'code' => 'qvantel_webhook_sim_api_key',
+                'value' => 'Basic YWRtaW46YWRtaW4=',
+                'group' => 'Qvantel',
+                'is_protected' => true
+            ],
 
         ];
 
