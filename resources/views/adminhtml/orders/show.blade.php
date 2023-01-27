@@ -1,4 +1,10 @@
 <x-app-layout>
+    <style>
+        pre {
+            overflow: auto;
+            /* height: 100px; */
+        }
+    </style>
     <div class="card">
         <div class="card-header top-card">
             <h5>Detalle de orden <span class="text-primary"># {{ $order->id }}</span></h5>
@@ -212,7 +218,7 @@
                                     <tr class="text-dark">
                                         <td>request</td>
                                         <td>:</td>
-                                        <td>{{ $event->request }}</td>
+                                        <td id="request"></td>
                                     </tr>
                                     <tr class="text-dark">
                                         <td>code</td>
@@ -224,7 +230,7 @@
                                     <tr class="text-dark">
                                         <td>response</td>
                                         <td>:</td>
-                                        <td>{{ $event->response }}</td>
+                                        <td id="response"></td>
                                     </tr>
                                     <tr class="text-dark">
                                         <td>created_at</td>
@@ -243,9 +249,24 @@
                         </div>
                     </div>
                 </div>
+                <div hidden id="requestData">{{ $event->request }}</div>
+                <div hidden id="responsetData">{{ $event->response }}</div>
 
             </div>
             <!-- [ Main Content ] end -->
         </div>
     </div>
+    <script>
+        $(function() {
+
+            var request = JSON.parse($('#requestData').text());
+
+            $('#request').html('<pre>' + JSON.stringify(request, null, 2) + ' </pre>')
+
+            var response = JSON.parse($('#responsetData').text());
+
+            $('#response').html('<pre>' + JSON.stringify(response, null, 2) + ' </pre>')
+
+        });
+    </script>
 </x-app-layout>

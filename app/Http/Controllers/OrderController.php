@@ -49,7 +49,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $events = Events::where('id', $order->id);
+        $events = Events::where('order_id', $order->id);
 
         // dd($events->first());
 
