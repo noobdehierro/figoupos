@@ -247,12 +247,12 @@ class RechargeController extends Controller
         try {
             if ($request->payment_method === 'Efectivo') {
 
-                $offering_id = $order->qv_offering_id;
-                $msisdn = $order->msisdn;
+                // $offering_id = $order->qv_offering_id;
+                // $msisdn = $order->msisdn;
 
-                $response = self::altanRecharge($msisdn, $offering_id);
+                // $response = self::altanRecharge($msisdn, $offering_id);
 
-                if (!isset($response->errors)) {
+                // if (!isset($response->errors)) {
 
                     $lastBalance = Balance::where('brand_id', $order->brand_id)
                         ->latest()
@@ -287,9 +287,9 @@ class RechargeController extends Controller
                     $movement->save();
                     $user->account->update();
 
-                } else {
-                    throw new \Exception($response->error->message);
-                }
+                // } else {
+                //     throw new \Exception($response->error->message);
+                // }
             } else {
                 $configuration = Configuration::wherein('code', [
                     'is_sandbox',
