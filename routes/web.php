@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AltanRechargeController;
 use App\Http\Controllers\CompatibilityController;
 use App\Http\Controllers\PortabilityController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CashClosingsController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CopomexController;
+use App\Http\Controllers\EquivalencyController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\MailerController;
 use App\Http\Controllers\PurchaseController;
@@ -157,6 +159,7 @@ Route::middleware('auth')->group(function () {
         'tools/portability' => PortabilityController::class,
         'mails' => MailController::class,
         'cash-closings' => CashClosingsController::class,
+        'equivalencies' => EquivalencyController::class,
 
     ]);
 

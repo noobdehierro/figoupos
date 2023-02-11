@@ -28,6 +28,13 @@
                 {{ $description }}
             </div>
         </div>
+        @if($seller_price ?? '')
+        <div class="card-body">
+            <div class="offering-sellerPrice">
+               Precio Vendedor: ${{ $seller_price }}MXN
+            </div>
+        </div>
+        @endif
         @if($selectButton)
             <div class="card-footer">
                 <a href="{{ $action_route }}" data-id="{{ $qv_offering_id }}" class="btn shadow-1 btn-primary offering-select">{{ $action }}</a>
@@ -41,3 +48,4 @@
         @endif
     </div>
 </div>
+

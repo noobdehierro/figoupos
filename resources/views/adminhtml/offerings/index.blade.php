@@ -13,6 +13,7 @@
             <x-offering id="{{ $offering->id }}" brand="{{ $offering->brand->name }}">
                 <x-slot name="name">{{ $offering->name }}</x-slot>
                 <x-slot name="price">{{ $offering->price }}</x-slot>
+                <x-slot name="seller_price">{{ $offering->seller_price }}</x-slot>
                 <x-slot name="description">
                     {!! $offering->description !!}
                 </x-slot>

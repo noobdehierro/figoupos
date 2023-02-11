@@ -64,7 +64,7 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
-    public function create(Offering $offering)
+    public function create(Offering $offering, Request $request)
     {
         return view('adminhtml.purchase.create', ['offering' => $offering]);
     }
@@ -101,7 +101,8 @@ class PurchaseController extends Controller
             'postcode' => 'required',
             'suburb' => 'required',
             'city' => 'required',
-            'region' => 'required'
+            'region' => 'required',
+            'seller_price' =>'required'
         ]);
 
         if ($request->portabilidad === 'on') {
@@ -259,6 +260,16 @@ class PurchaseController extends Controller
     {
         $conekta_private_key = self::getConektaConfiguration();
 
+        $totalOriginal = $order->total;
+
+        if ($request->card_payment_method == 'Tarjeta_vendedor') {
+            $order->total = $order->seller_price;
+            $payment_method = 'Tarjeta Vendedor';
+        } else {
+            $order->total = $totalOriginal;
+            $payment_method = 'Tarjeta de crédito';
+        }
+
         $conektaData = [
             'amount' => floatval($order->total) * 100,
             'currency' => 'MXN',
@@ -333,7 +344,7 @@ class PurchaseController extends Controller
                 );
             } else {
                 if (isset($conektaOrder->id)) {
-                    $order->payment_method = 'Tarjeta de crédito';
+                    $order->payment_method = $payment_method;
                     $order->payment_id = $conektaOrder->id;
                     $order->status = 'Complete';
 

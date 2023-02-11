@@ -59,6 +59,7 @@ class OfferingController extends Controller
             'description' => 'required',
             'promotion' => 'nullable',
             'price' => 'required|numeric',
+            'seller_price' => 'required|numeric',
             'brand_id' => 'required'
         ]);
 
@@ -69,6 +70,7 @@ class OfferingController extends Controller
             $offering->description = $request->description;
             $offering->promotion = $request->promotion;
             $offering->price = $request->price;
+            $offering->seller_price = $request->seller_price;
             $offering->brand_id = $request->brand_id;
             $offering->save();
         } catch (\Exception $exception) {
@@ -124,6 +126,7 @@ class OfferingController extends Controller
             'description' => 'required',
             'promotion' => 'nullable',
             'price' => 'required|numeric',
+            'seller_price' => 'required|numeric',
             'brand_id' => 'required'
         ]);
 
@@ -133,6 +136,7 @@ class OfferingController extends Controller
             $offering->description = $request->description;
             $offering->promotion = $request->promotion;
             $offering->price = $request->price;
+            $offering->seller_price = $request->seller_price;
             $offering->brand_id = $request->brand_id;
             $offering->save();
         } catch (\Exception $exception) {
