@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(OfferingSeeder::class);
         $this->call(ConfigurationSeeder::class);
         $this->call(MailSeeder::class);
+        $this->call(EquivalencySeeder::class);
     }
 }

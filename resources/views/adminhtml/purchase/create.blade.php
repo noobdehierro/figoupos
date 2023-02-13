@@ -47,6 +47,8 @@
                                                 value="{{ $offering->brand->name }}"></x-form-input>
                                             <x-form-input name="total" type="hidden" value="{{ $offering->price }}">
                                             </x-form-input>
+                                            <x-form-input name="seller_price" type="hidden" value="{{ $offering->seller_price }}">
+                                            </x-form-input>
                                             <x-form-input name="channel" type="hidden" value="POS"></x-form-input>
                                             <x-form-input name="name" required="true" size="m">Nombre
                                             </x-form-input>

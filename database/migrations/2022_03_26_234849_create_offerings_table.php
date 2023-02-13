@@ -20,6 +20,7 @@ class CreateOfferingsTable extends Migration
             $table->text('description');
             $table->string('promotion')->nullable();
             $table->decimal('price');
+            $table->decimal('seller_price');
             $table->unsignedBigInteger('brand_id');
             $table->string('type')->default('normal');
             $table->boolean('is_active')->default(1);

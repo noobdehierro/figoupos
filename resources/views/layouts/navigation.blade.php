@@ -79,6 +79,7 @@
                         </li>
 
                         <x-nav-link route="configurations.index" icon="settings" group="configurations">Configuración</x-nav-link>
+                        <x-nav-link route="equivalencies.index" icon="list" group="equivalencies">Equivalencias</x-nav-link>
                         <x-nav-link route="configurations.index" icon="cloud" group="api">API</x-nav-link>
                     @endsuper
                 @enddistr

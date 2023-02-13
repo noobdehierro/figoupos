@@ -10666,6 +10666,13 @@ img.login-logo {
     line-height: 25px;
 }
 
+.offering-sellerPrice {
+  color: #595959;
+  line-height: 25px;
+  font-size: small;
+  text-align: end !important;
+}
+
 .offering-price {
     color: #000000;
     font-size: 17px;

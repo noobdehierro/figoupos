@@ -43,6 +43,7 @@ class CreateOrdersTable extends Migration
             $table->string('brand_name')->default('Figou');
             $table->string('channel')->default('pos');
             $table->decimal('total')->default(0);
+            $table->decimal('seller_price')->default(0);
             $table->timestamps();
 
             $table

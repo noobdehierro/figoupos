@@ -43,7 +43,8 @@ class Order extends Model
         'brand_id',
         'brand_name',
         'channel',
-        'total'
+        'total',
+        'seller_price'
     ];
 
     public $sortable = [
