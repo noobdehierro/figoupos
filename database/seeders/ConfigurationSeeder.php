@@ -64,6 +64,22 @@ class ConfigurationSeeder extends Seeder
                 'is_protected' => true
             ],
             [
+                'label' => 'Altan Products Purchase Endpoint',
+                'code' => 'altan_products_purchase_endpoint',
+                'value' =>
+                'https://altanredes-prod.apigee.net/cm/v1/products/purchase',
+                'group' => 'Altan',
+                'is_protected' => true
+            ],
+            [
+                'label' => 'Altan Products Purchase Endpoint Sandbox',
+                'code' => 'altan_products_purchase_endpoint_sandbox',
+                'value' =>
+                'https://altanredes-prod.apigee.net/cm-sandbox/v1/products/purchase',
+                'group' => 'Altan',
+                'is_protected' => true
+            ],
+            [
                 'label' => 'Altan Device Info Endpoint',
                 'code' => 'altan_device_info_endpoint',
                 'value' =>

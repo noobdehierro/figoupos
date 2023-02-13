@@ -34,6 +34,7 @@
                                     <button id="cash" class="btn btn-primary" type="button" data-payment="Efectivo">Efectivo</button>
                                     @endif
                                     <button id="card" class="btn btn-primary" type="button" data-payment="Tarjeta">Tarjeta de crédito/débito</button>
+                                    <button id="seller_card" class="btn btn-primary" type="button" data-payment="Tarjeta_vendedor">Tarjeta de vendedor</button>
                                 @else
                                     <div class="alert-warning alert-dismissible fade show alert" role="alert">
                                         Lo sentimos, esta venta exede su limite establecido.
@@ -100,6 +101,7 @@
                             </x-form>
                             <x-form id="conekta_form" method="PUT" action="{{ route('purchase.conekta', $order->id) }}">
                                 <x-form-input type="hidden" name="token" value=""></x-form-input>
+                                <x-form-input type="hidden" name="card_payment_method" id="card_payment_method" value=""></x-form-input>
                             </x-form>
                             <script type="text/javascript">
                                 $(document).ready(function () {
@@ -118,6 +120,12 @@
                                     $('#card').on('click',function () {
                                         $('#cash_confirm').hide();
                                         $('#conekta_credit_card').show('slow');
+                                        $('#card_payment_method').val('Tarjeta de crédito');
+                                    });
+                                    $('#seller_card').on('click',function () {
+                                        $('#cash_confirm').hide();
+                                        $('#conekta_credit_card').show('slow');
+                                        $('#card_payment_method').val('Tarjeta_vendedor');
                                     });
                                 });
                             </script>

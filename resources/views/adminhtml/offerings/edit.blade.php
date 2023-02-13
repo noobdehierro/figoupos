@@ -26,6 +26,9 @@
                                     <x-form-input name="price" required="true" type="number" value="{{ $offering->price }}" size="s">Precio</x-form-input>
                                 </div>
                                 <div class="row">
+                                    <x-form-input name="seller_price" required="true" type="number" value="{{ $offering->seller_price }}" size="s">Precio de Vendedor</x-form-input>
+                                </div>
+                                <div class="row">
                                     <x-form-input name="qv_offering_id" required="true" small="Identificador relacionado a las ofertas de Qvantel" value="{{ $offering->qv_offering_id }}" size="s">ID Qvantel</x-form-input>
                                 </div>
                                 <div class="row">

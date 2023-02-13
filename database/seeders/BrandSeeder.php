@@ -47,6 +47,13 @@ class BrandSeeder extends Seeder
                 'description' => 'Sindicato de trabajadores Catem',
                 'is_primary' => true,
                 'is_active' => true
+            ],
+            [
+                'parent_id' => 1,
+                'name' => 'Be Online',
+                'description' => 'Alianza Be Online',
+                'is_primary' => true,
+                'is_active' => true
             ]
         ];
 

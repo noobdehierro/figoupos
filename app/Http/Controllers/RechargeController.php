@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\OrderRecharge;
 use App\Models\Balance;
 use App\Models\Configuration;
+use App\Models\Equivalency;
 use App\Models\Movement;
 use App\Models\Offering;
 use App\Models\Order;
@@ -245,9 +246,17 @@ class RechargeController extends Controller
 
         try {
             if ($request->payment_method === 'Efectivo') {
-                $lastBalance = Balance::where('brand_id', $order->brand_id)
-                    ->latest()
-                    ->first();
+
+                // $offering_id = $order->qv_offering_id;
+                // $msisdn = $order->msisdn;
+
+                // $response = self::altanRecharge($msisdn, $offering_id);
+
+                // if (!isset($response->errors)) {
+
+                    $lastBalance = Balance::where('brand_id', $order->brand_id)
+                        ->latest()
+                        ->first();
 
                 $newBalance = new Balance();
 
@@ -273,10 +282,14 @@ class RechargeController extends Controller
                 $movement->description = 'Cobro de efectivo';
                 $movement->operation = 'Recarga';
 
-                $order->update();
-                $newBalance->save();
-                $movement->save();
-                $user->account->update();
+                    $order->update();
+                    $newBalance->save();
+                    $movement->save();
+                    $user->account->update();
+
+                // } else {
+                //     throw new \Exception($response->error->message);
+                // }
             } else {
                 $configuration = Configuration::wherein('code', [
                     'is_sandbox',
@@ -652,5 +665,74 @@ class RechargeController extends Controller
         ];
 
         return $openpay;
+    }
+
+    private function altanRecharge($msisdn, $offering_id)
+    {
+
+        $configuration = Configuration::wherein('code', [
+            'is_sandbox',
+            'altan_products_purchase_endpoint',
+            'altan_products_purchase_endpoint_sandbox',
+        ])->get();
+
+        foreach ($configuration as $config) {
+            if ($config->code == 'is_sandbox') {
+                $is_sandbox = $config->value;
+            }
+            if ($config->code == 'altan_products_purchase_endpoint') {
+                $altan_products_purchase_endpoint = $config->value;
+            }
+            if ($config->code == 'altan_products_purchase_endpoint_sandbox') {
+                $altan_products_purchase_endpoint_sandbox = $config->value;
+            }
+        }
+
+        if ($is_sandbox === 'true') {
+            $endpoint = $altan_products_purchase_endpoint_sandbox;
+            $token = '6c2NnSWNMRmxhNmZwWHVFVw';
+        } else {
+            $endpoint = $altan_products_purchase_endpoint;
+            $token = self::altanGetToken()->accessToken;
+        }
+
+        $new_offering_id = Equivalency::where('qv_offering_id', $offering_id)->value('altan_offering_id');
+
+        //dd([$endpoint,$token,$new_offering_id]);
+
+        $body = [
+            "msisdn" => $msisdn,
+            "offerings" => [$new_offering_id]
+        ];
+
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+
+        $basket = Http::withHeaders($headers)->post($endpoint, $body);
+
+        if ($basket->successful()) {
+            $response = json_decode($basket);
+        }
+
+        return $response;
+    }
+
+    protected function altanGetToken()
+    {
+        $configuration = Configuration::wherein('code', [
+            'altan_auth_endpoint',
+            'altan_token'
+        ])->get();
+
+        $endpoint = $configuration[0]->value . '?grant-type=client_credentials';
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Basic ' . $configuration[1]->value,
+            'Content-Type' => 'application/x-www-form-urlencoded;charset=utf-8'
+        ])->post($endpoint);
+
+        return json_decode($response);
     }
 }

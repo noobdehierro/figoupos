@@ -15,6 +15,7 @@ class Offering extends Model
         'description',
         'promotion',
         'price',
+        'seller_price',
         'brand_id'
     ];
 
