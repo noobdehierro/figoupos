@@ -5,7 +5,7 @@
             <div class="mb-4">
                 <img class="login-logo" src="{{ asset('adminhtml/images/igoutelecom.png') }}" alt="logo.png" />
             </div>
-            <h3 class="mb-4"><i class="feather icon-unlock auth-icon"></i> Acceso </h3>
+            <h3 class="mb-4"><i class="feather icon-unlock auth-icon"></i> Acceso papucho</h3>
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show text-left" role="alert">
                     <ul class="mt-0 mb-0 pl-0 list-unstyled text-sm text-red-600">
@@ -13,11 +13,13 @@
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
             @endif
             <div class="input-group mb-3">
-                <input type="email" name="email" id="email" class="form-control" placeholder="Correo electrónico" value="{{ old('email') }}" autofocus>
+                <input type="email" name="email" id="email" class="form-control"
+                    placeholder="Correo electrónico" value="{{ old('email') }}" autofocus>
             </div>
             <div class="input-group mb-4">
                 <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña">
@@ -30,13 +32,14 @@
             </div>
             <button class="btn btn-primary shadow-2 mb-4">{{ __('Entrar') }}</button>
             @if (Route::has('password.request'))
-                <p class="mb-2 text-muted">¿Olvidó la contraseña? <a href="{{ route('password.request') }}">{{ __('Reiniciar') }}</a></p>
+                <p class="mb-2 text-muted">¿Olvidó la contraseña? <a
+                        href="{{ route('password.request') }}">{{ __('Reiniciar') }}</a></p>
             @endif
         </form>
     </div>
     <script>
-        $(function () {
-            $("#login-form").validate( {
+        $(function() {
+            $("#login-form").validate({
                 rules: {
                     email: {
                         required: true,
@@ -52,27 +55,24 @@
                     password: 'El campo password es requerido.'
                 },
                 errorElement: "em",
-                errorPlacement: function ( error, element ) {
+                errorPlacement: function(error, element) {
                     // Add the `help-block` class to the error element
-                    error.addClass( "help-block" );
+                    error.addClass("help-block");
 
-                    if ( element.prop( "type" ) === "checkbox" ) {
-                        error.insertAfter( element.parent( "label" ) );
+                    if (element.prop("type") === "checkbox") {
+                        error.insertAfter(element.parent("label"));
                     } else {
-                        error.insertAfter( element );
+                        error.insertAfter(element);
                     }
                 },
-                highlight: function ( element, errorClass, validClass ) {
-                    $( element ).parents( ".input-group" ).addClass( "has-error" ).removeClass( "has-success" );
+                highlight: function(element, errorClass, validClass) {
+                    $(element).parents(".input-group").addClass("has-error").removeClass("has-success");
                 },
-                unhighlight: function (element, errorClass, validClass) {
-                    $( element ).parents( ".input-group" ).addClass( "has-success" ).removeClass( "has-error" );
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).parents(".input-group").addClass("has-success").removeClass("has-error");
                 }
             });
 
         });
     </script>
 </x-auth-layout>
-
-
-
